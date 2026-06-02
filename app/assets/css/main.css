@@ -71,21 +71,20 @@ a:hover { color: var(--accent-hover); text-decoration: underline; text-underline
 .hr-soft { height: 1px; background: var(--border); border: 0; margin: 0; }
 
 /* Serif headings — italics + accent for emphasis */
-.hero-title, .gen-title, .section-title, .result-h, .step-title {
+.hero-title, .gen-title, .section-title, .step-title {
   font-family: var(--font-serif);
   font-weight: 400;
   letter-spacing: -0.015em;
   color: var(--text);
   margin: 0;
 }
-.hero-title em, .gen-title em, .section-title em, .result-h em {
+.hero-title em, .gen-title em, .section-title em {
   font-style: italic; color: var(--accent);
 }
 
 .hero-title    { font-size: clamp(40px, 6vw, 56px); line-height: 1.08; }
 .gen-title     { font-size: clamp(34px, 5vw, 44px); line-height: 1.05; }
 .section-title { font-size: clamp(26px, 3.5vw, 32px); line-height: 1.15; }
-.result-h      { font-size: clamp(30px, 4.5vw, 40px); line-height: 1.08; }
 .step-title    { font-size: 18px; line-height: 1.3; font-family: var(--font-sans); font-weight: 600; letter-spacing: 0; }
 
 /* ── Nav ────────────────────────────────────────────────────────────────── */
@@ -389,16 +388,11 @@ a:hover { color: var(--accent-hover); text-decoration: underline; text-underline
 .errbar-b { font-size: 13px; line-height: 1.5; opacity: 0.85; }
 
 /* ── Result document ────────────────────────────────────────────────────── */
-.result-head {
-  display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
-  flex-wrap: wrap; margin-bottom: 20px;
+.result-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  flex-wrap: wrap; margin-bottom: 12px;
 }
-.result-eyebrow { margin-bottom: 8px; display: inline-block; }
-.edit-flag {
-  display: inline-flex; align-items: center; gap: 6px;
-  color: var(--text-3); font-size: 12.5px;
-  padding: 6px 10px; background: var(--bg-elev); border-radius: var(--r-pill);
-}
+.result-bar .yd-back { margin: 0; }
 
 .doc {
   position: relative;
@@ -406,13 +400,16 @@ a:hover { color: var(--accent-hover); text-decoration: underline; text-underline
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   box-shadow: var(--shadow-sm);
-  margin: 20px 0;
+  margin: 0 0 20px;
   overflow: hidden;
 }
-.doc-edge {
-  position: absolute; left: 24px; top: 0; bottom: 0; width: 1px;
-  background: color-mix(in srgb, var(--danger) 35%, transparent);
-  opacity: 0.35;
+.doc-banner {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px 16px;
+  background: var(--accent-soft); color: var(--accent);
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+  font-size: 13px; font-weight: 500;
+  user-select: none;
 }
 .doc-body {
   padding: 48px 56px;
@@ -422,6 +419,8 @@ a:hover { color: var(--accent-hover); text-decoration: underline; text-underline
 .doc-body.is-sans { font-family: var(--font-sans); font-size: 15.5px; }
 .doc-date { text-align: right; font-family: var(--font-mono); font-size: 12px; color: var(--text-3); margin-bottom: 28px; }
 .doc-makam { font-family: var(--font-sans); font-weight: 600; font-size: 14.5px; letter-spacing: 0.04em; margin-bottom: 28px; }
+.doc-makam:has(+ .doc-birim) { margin-bottom: 4px; }
+.doc-birim { font-family: var(--font-sans); font-weight: 500; font-size: 13px; letter-spacing: 0.04em; color: var(--text-2); margin: 0 0 28px; }
 .doc-konu { margin: 0 0 24px; font-size: 0.96em; }
 .doc-konu .k-label { font-family: var(--font-sans); font-weight: 600; }
 .doc-p { margin: 0 0 18px; text-align: justify; }
@@ -430,6 +429,7 @@ a:hover { color: var(--accent-hover); text-decoration: underline; text-underline
 .doc-sign-saygi { margin-bottom: 32px; }
 .doc-sign-rule { display: inline-block; width: 140px; height: 1px; background: var(--text-3); }
 .doc-sign-name { display: inline-block; margin-top: 4px; font-family: var(--font-sans); font-size: 14px; }
+.doc-sign-extra { margin-top: 2px; font-family: var(--font-sans); font-size: 13px; color: var(--text-2); }
 [contenteditable]:focus { outline: 1px dashed var(--accent); outline-offset: 4px; background: var(--accent-soft); border-radius: 2px; }
 
 /* ── Result actions ─────────────────────────────────────────────────────── */
@@ -502,7 +502,7 @@ a:hover { color: var(--accent-hover); text-decoration: underline; text-underline
 
 /* ── Print ──────────────────────────────────────────────────────────────── */
 @media print {
-  .yd-nav, .yd-footer, .yd-back, .result-head, .actions, .toast { display: none !important; }
+  .yd-nav, .yd-footer, .yd-back, .result-bar, .doc-banner, .actions, .toast { display: none !important; }
   .yd-page { padding: 0; }
   .doc { border: 0; box-shadow: none; margin: 0; }
   .doc-body { padding: 32px 0; }

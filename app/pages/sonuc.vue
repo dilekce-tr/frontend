@@ -87,27 +87,27 @@ async function onRegenerate() {
         <DilekceLoading />
       </template>
       <template v-else-if="letter">
-        <NuxtLink to="/olustur" class="yd-back">
-          <DilekceIcon name="arrowLeft" :size="16" />
-          <span>Düzenle</span>
-        </NuxtLink>
-
-        <div class="result-head">
-          <div>
-            <div class="eyebrow result-eyebrow">Dilekçeniz hazır</div>
-            <h1 class="result-h">İşte resmî <em>dilekçeniz</em></h1>
-          </div>
-          <span class="edit-flag">
-            <DilekceIcon name="edit" :size="13" />
-            Metne dokunup düzenleyebilirsiniz
-          </span>
+        <div class="result-bar">
+          <NuxtLink to="/olustur" class="yd-back">
+            <DilekceIcon name="arrowLeft" :size="16" />
+            <span>Düzenle</span>
+          </NuxtLink>
         </div>
 
         <div class="doc" ref="docRef">
-          <div class="doc-edge" aria-hidden="true" />
+          <div class="doc-banner">
+            <DilekceIcon name="edit" :size="14" />
+            <span>Metne dokunup istediğiniz yeri düzenleyebilirsiniz</span>
+          </div>
           <div class="doc-body" :class="{ 'is-sans': docSans }">
             <div class="doc-date" contenteditable spellcheck="false">{{ letter.tarih }}</div>
             <div class="doc-makam" contenteditable spellcheck="false">{{ letter.makam }}</div>
+            <div
+              v-if="letter.birim"
+              class="doc-birim"
+              contenteditable
+              spellcheck="false"
+            >{{ letter.birim }}</div>
             <p v-if="letter.konu" class="doc-konu" contenteditable spellcheck="false">
               <span class="k-label">Konu: </span>{{ letter.konu }}
             </p>
@@ -123,6 +123,13 @@ async function onRegenerate() {
               <div class="doc-sign-saygi" contenteditable spellcheck="false">{{ letter.saygi }}</div>
               <span class="doc-sign-rule" aria-hidden="true" /><br />
               <span class="doc-sign-name" contenteditable spellcheck="false">{{ letter.adSoyad }}</span>
+              <div
+                v-for="(line, i) in (letter.ekBilgiler || [])"
+                :key="i"
+                class="doc-sign-extra"
+                contenteditable
+                spellcheck="false"
+              >{{ line }}</div>
             </div>
           </div>
         </div>
