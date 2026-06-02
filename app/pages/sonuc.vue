@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Letter } from '~/composables/usePetition'
 
-const { letter, generate, loading } = usePetition()
+const { letter, generate, loading, aiSkipped } = usePetition()
 const { show: toast } = useToast()
 const { download: downloadPdf } = usePdf()
 const router = useRouter()
@@ -92,6 +92,15 @@ async function onRegenerate() {
             <DilekceIcon name="arrowLeft" :size="16" />
             <span>Düzenle</span>
           </NuxtLink>
+        </div>
+
+        <div v-if="aiSkipped" class="result-notice" role="status">
+          <DilekceIcon name="shield" :size="14" />
+          <div>
+            <strong>Yapay zeka düzenleyici şu anda erişilemiyor.</strong>
+            Metin sizden geldiği gibi gösterildi; dilerseniz aşağıdaki paragrafları
+            elle düzenleyebilirsiniz.
+          </div>
         </div>
 
         <div class="doc" ref="docRef">

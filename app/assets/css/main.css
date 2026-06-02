@@ -393,6 +393,17 @@ a:hover { color: var(--accent-hover); text-decoration: underline; text-underline
   flex-wrap: wrap; margin-bottom: 12px;
 }
 .result-bar .yd-back { margin: 0; }
+.result-notice {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 12px 14px;
+  background: var(--warning-soft); color: var(--warning);
+  border: 1px solid color-mix(in srgb, var(--warning) 28%, transparent);
+  border-radius: var(--r-md);
+  font-size: 13px; line-height: 1.55;
+  margin-bottom: 14px;
+}
+.result-notice strong { font-weight: 600; color: var(--warning); margin-right: 4px; }
+.result-notice svg { flex: 0 0 auto; margin-top: 2px; }
 
 .doc {
   position: relative;
@@ -502,7 +513,7 @@ a:hover { color: var(--accent-hover); text-decoration: underline; text-underline
 
 /* ── Print ──────────────────────────────────────────────────────────────── */
 @media print {
-  .yd-nav, .yd-footer, .yd-back, .result-bar, .doc-banner, .actions, .toast { display: none !important; }
+  .yd-nav, .yd-footer, .yd-back, .result-bar, .result-notice, .doc-banner, .actions, .toast { display: none !important; }
   .yd-page { padding: 0; }
   .doc { border: 0; box-shadow: none; margin: 0; }
   .doc-body { padding: 32px 0; }
