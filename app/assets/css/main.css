@@ -253,7 +253,9 @@ a:hover { color: var(--accent-hover); text-decoration: underline; text-underline
 }
 
 /* ── Generator card ─────────────────────────────────────────────────────── */
-.gen-sub { color: var(--text-2); font-size: 16px; line-height: 1.55; margin: 12px 0 28px; max-width: 600px; }
+.gen-sub { color: var(--text-2); font-size: 16px; line-height: 1.55; margin: 12px 0 12px; max-width: 600px; }
+.gen-legend { font-size: 12.5px; color: var(--text-3); margin: 0 0 24px; }
+.gen-req-mark { color: var(--accent); margin-left: 4px; font-weight: 500; }
 .gen-card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -270,8 +272,10 @@ a:hover { color: var(--accent-hover); text-decoration: underline; text-underline
   font-family: var(--font-mono); font-size: 11px; font-weight: 500;
 }
 .gen-q-label { font: 500 15px/1.3 var(--font-sans); color: var(--text); }
+.gen-q-opt { font-weight: 400; color: var(--text-3); margin-left: 4px; }
 .gen-q-hint { font-size: 13px; color: var(--text-3); margin: 0 0 12px 32px; }
 .gen-q-body { margin-left: 32px; }
+.gen-q-sub { margin-top: 8px; font-size: 13.5px; }
 .gen-chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .gen-chip {
   display: inline-flex; align-items: center; gap: 6px;
@@ -295,6 +299,8 @@ a:hover { color: var(--accent-hover); text-decoration: underline; text-underline
   display: inline-flex; align-items: center; gap: 6px;
   color: var(--text-3); font-size: 12.5px;
 }
+.gen-foot-note--missing { color: var(--text-2); }
+.gen-foot-note--missing strong { color: var(--text); font-weight: 500; }
 .gen-submit {
   display: inline-flex; align-items: center; gap: 10px;
   height: 48px; padding: 0 22px;
@@ -304,9 +310,10 @@ a:hover { color: var(--accent-hover); text-decoration: underline; text-underline
   font: 500 15px/1 var(--font-sans);
   transition: background 120ms ease, transform 120ms ease;
 }
-.gen-submit:hover:not(:disabled) { background: var(--accent-hover); }
-.gen-submit:active:not(:disabled) { background: var(--accent-press); }
+.gen-submit:hover:not(:disabled):not(.is-blocked) { background: var(--accent-hover); }
+.gen-submit:active:not(:disabled):not(.is-blocked) { background: var(--accent-press); }
 .gen-submit:disabled { opacity: 0.45; cursor: not-allowed; }
+.gen-submit.is-blocked { opacity: 0.55; }
 .gen-submit:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--focus-ring); }
 
 /* ── Wordy form inputs ──────────────────────────────────────────────────── */
@@ -324,6 +331,14 @@ a:hover { color: var(--accent-hover); text-decoration: underline; text-underline
 .wordy-input::placeholder, .wordy-textarea::placeholder { color: var(--text-3); font-style: italic; }
 .wordy-input:focus, .wordy-textarea:focus {
   border-color: var(--accent); box-shadow: 0 0 0 3px var(--focus-ring);
+}
+.wordy-input.is-invalid, .wordy-textarea.is-invalid {
+  background: var(--danger-soft);
+  border-color: var(--danger);
+}
+.wordy-input.is-invalid:focus, .wordy-textarea.is-invalid:focus {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(159, 56, 56, 0.18);
 }
 
 /* ── Loading ────────────────────────────────────────────────────────────── */
