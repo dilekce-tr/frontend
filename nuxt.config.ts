@@ -25,7 +25,13 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:3012/api/v1'
+      // Default to the local Rails server in dev and to the prod API in
+      // every other build (preview, production). Set NUXT_PUBLIC_API_BASE
+      // to override — e.g. when a preview branch needs to point at staging.
+      apiBase: process.env.NUXT_PUBLIC_API_BASE
+        || (process.env.NODE_ENV === 'production'
+          ? 'https://api.yazbirdilekce.com/api/v1'
+          : 'http://localhost:3012/api/v1')
     }
   },
   routeRules: {
