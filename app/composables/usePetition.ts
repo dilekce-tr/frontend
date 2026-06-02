@@ -1,25 +1,28 @@
 // Owns the petition's form/letter/history state and the call to the backend.
-// While the Rails backend is not yet wired, generate() returns a fixture
-// response so the UI is fully testable end-to-end. Swap fetchLetter() to a
-// real $fetch when the backend lands.
+// POSTs to `${apiBase}/petitions/generate` and persists the returned Letter
+// to localStorage so /sonuc, /gecmis survive reloads.
 import type { CategoryId } from './useCategories'
 
 export interface DilekceForm {
   kategori: CategoryId
   makam: string
+  birim: string
   konu: string
   aciklama: string
   adSoyad: string
+  ekBilgiler: string
 }
 
 export interface Letter {
   tarih: string
   makam: string
+  birim: string
   konu: string
   paragraflar: string[]
   kapanis: string
   saygi: string
   adSoyad: string
+  ekBilgiler: string[]
 }
 
 export interface HistoryEntry {
@@ -33,9 +36,25 @@ export interface HistoryEntry {
 const BLANK_FORM: DilekceForm = {
   kategori: 'belediye',
   makam: '',
+  birim: '',
   konu: '',
   aciklama: '',
-  adSoyad: ''
+  adSoyad: '',
+  ekBilgiler: ''
+}
+
+// Dev-only seed so /olustur is testable without retyping every reload.
+// Stripped from production builds because `import.meta.dev` is a compile-time
+// constant — the SAMPLE_FORM literal is dead code under `nuxt build`.
+const SAMPLE_FORM: DilekceForm = {
+  kategori: 'belediye',
+  makam: 'İzmir Büyükşehir Belediyesi',
+  birim: 'Fen İşleri Müdürlüğü',
+  konu: 'Sokak lambasının arızası hakkında',
+  aciklama:
+    'Evimin önündeki sokak lambası iki haftadır yanmıyor. Akşamları sokak çok karanlık oluyor ve güvenli değil. Lambanın bir an önce tamir edilmesini istiyorum.',
+  adSoyad: 'Ayşe Yılmaz',
+  ekBilgiler: 'T.C. Kimlik No: 12345678901\nTelefon: 0555 555 55 55'
 }
 
 const LS = {
@@ -56,14 +75,28 @@ function hydrate<T>(key: string, fallback: T): T {
   return import.meta.client ? LS.get(key, fallback) : fallback
 }
 
-export function usePetition() {
-  const { trDate } = useTrDate()
+// Shape of an error returned from the Rails API.
+// `code` matches CLAUDE.md: 'monthly_limit_reached', validation codes, etc.
+interface ApiError {
+  code?: string
+  message?: string
+  errors?: Record<string, string[] | string>
+  details?: { used?: number; limit?: number }
+}
 
-  const form    = useState<DilekceForm>('yd-form',    () => ({ ...BLANK_FORM, ...hydrate('yd_form', {}) }))
+export function usePetition() {
+  const { request } = useApi()
+
+  const form    = useState<DilekceForm>('yd-form',    () => (
+    import.meta.dev
+      ? { ...hydrate('yd_form', {}), ...SAMPLE_FORM }
+      : { ...BLANK_FORM, ...hydrate('yd_form', {}) }
+  ))
   const letter  = useState<Letter | null>('yd-letter', () => hydrate<Letter | null>('yd_letter', null))
   const history = useState<HistoryEntry[]>('yd-history', () => hydrate<HistoryEntry[]>('yd_history', []))
   const loading = useState<boolean>('yd-loading', () => false)
   const error   = useState<string | null>('yd-error', () => null)
+  const generationId = useState<string | null>('yd-gen-id', () => null)
 
   if (import.meta.client) {
     watch(form,    (v) => LS.set('yd_form', v),    { deep: true })
@@ -88,19 +121,23 @@ export function usePetition() {
     error.value = null
     loading.value = true
     try {
-      const L = await fetchLetter(form.value)
-      letter.value = L
+      const res = await request<{ letter: Letter; generation_id: string }>(
+        '/petitions/generate',
+        { method: 'POST', body: { form: form.value } }
+      )
+      letter.value = res.letter
+      generationId.value = res.generation_id ?? null
       const entry: HistoryEntry = {
         id: Date.now().toString(36),
         ts: Date.now(),
         kategori: form.value.kategori,
         konu: form.value.konu,
-        letter: L
+        letter: res.letter
       }
       history.value = [entry, ...history.value].slice(0, 30)
-      return L
+      return res.letter
     } catch (e: unknown) {
-      error.value = 'Dilekçe oluşturulurken bir sorun oluştu. Lütfen tekrar deneyin.'
+      error.value = formatApiError(e)
       return null
     } finally {
       loading.value = false
@@ -121,27 +158,49 @@ export function usePetition() {
     history.value = history.value.filter(x => x.id !== id)
   }
 
-  // Replace with a $fetch to /api/v1/petitions/generate once the backend
-  // exists. Kept local until then so the UI runs without a Rails server.
-  async function fetchLetter(f: DilekceForm): Promise<Letter> {
-    await new Promise((r) => setTimeout(r, 900))
-    return {
-      tarih: trDate(),
-      makam: (f.makam || '').toUpperCase(),
-      konu: f.konu,
-      paragraflar: [
-        `Şahsım adıma, ${f.aciklama.trim()} konusunda tarafınıza başvurmaktayım. Yaşadığım durum, gündelik hayatımı doğrudan etkilemekte olup ivedilikle çözüme kavuşturulmasını gerekli kılmaktadır.`,
-        'Yukarıda arz ettiğim hususun değerlendirilmesini ve tarafıma yazılı olarak bilgi verilmesini saygıyla talep ederim.'
-      ],
-      kapanis: 'Gereğini bilgilerinize arz ederim.',
-      saygi: 'Saygılarımla,',
-      adSoyad: f.adSoyad
-    }
-  }
-
   return {
-    form, letter, history, loading, error,
+    form, letter, history, loading, error, generationId,
     set, reset, isReady,
     generate, openHistory, deleteHistory
   }
+}
+
+// Turn a $fetch error into a single Turkish sentence for the errbar.
+// Handles the codes documented in CLAUDE.md (monthly_limit_reached, validation
+// failures) plus network and unknown-server cases.
+function formatApiError(e: unknown): string {
+  const err = e as { status?: number; statusCode?: number; data?: ApiError; message?: string }
+  const status = err.status ?? err.statusCode
+  const data = err.data ?? {}
+
+  if (status === 422) {
+    const firstFieldError = data.errors && Object.values(data.errors).flat()[0]
+    if (typeof firstFieldError === 'string' && firstFieldError.length > 0) {
+      return firstFieldError
+    }
+    return 'Form alanlarında hata var. Lütfen kontrol edip tekrar deneyin.'
+  }
+
+  if (status === 429) {
+    if (data.code === 'monthly_limit_reached') {
+      const limit = data.details?.limit
+      return limit
+        ? `Aylık dilekçe sınırınıza ulaştınız (${limit}). Planınızı yükseltebilir veya bir sonraki ayı bekleyebilirsiniz.`
+        : 'Aylık dilekçe sınırınıza ulaştınız. Planınızı yükseltebilirsiniz.'
+    }
+    return 'Günlük dilekçe sınırına ulaştınız. Lütfen daha sonra tekrar deneyin.'
+  }
+
+  if (status && status >= 500) {
+    return 'Sunucu şu anda yanıt vermiyor. Lütfen birkaç dakika sonra tekrar deneyin.'
+  }
+
+  // No status means the fetch never reached the server (CORS, DNS, offline,
+  // Rails not running). Distinguish from "server replied with error" so the
+  // user knows to check their connection / backend.
+  if (status == null) {
+    return 'Sunucuya bağlanılamadı. Bağlantınızı veya servisin çalıştığını kontrol edin.'
+  }
+
+  return data.message || 'Dilekçe oluşturulurken bir sorun oluştu. Lütfen tekrar deneyin.'
 }

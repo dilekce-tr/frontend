@@ -1,10 +1,14 @@
 <script setup lang="ts">
+import type { Letter } from '~/composables/usePetition'
+
 const { letter, generate, loading } = usePetition()
 const { show: toast } = useToast()
+const { download: downloadPdf } = usePdf()
 const router = useRouter()
 
 const docRef = ref<HTMLElement | null>(null)
 const copied = ref(false)
+const downloading = ref(false)
 // "Klasik" (serif) by default; could be tied to a user preference later.
 const docSans = ref(false)
 
@@ -14,9 +18,29 @@ onMounted(() => {
 })
 
 function readText(): string {
-  const el = docRef.value
+  const el = docRef.value?.querySelector<HTMLElement>('.doc-body')
   if (!el) return ''
   return el.innerText.replace(/\n{3,}/g, '\n\n').trim()
+}
+
+// Re-read the document from the live DOM so user edits flow into the PDF.
+function readEdited(): Letter | null {
+  const el = docRef.value
+  if (!el || !letter.value) return null
+  const t = (sel: string) => (el.querySelector(sel) as HTMLElement | null)?.innerText.trim() ?? ''
+  const konuRaw = t('.doc-konu')
+  return {
+    tarih: t('.doc-date') || letter.value.tarih,
+    makam: t('.doc-makam') || letter.value.makam,
+    birim: t('.doc-birim') || letter.value.birim || '',
+    konu: konuRaw.replace(/^Konu:\s*/i, '') || letter.value.konu,
+    paragraflar: Array.from(el.querySelectorAll('.doc-p')).map((p) => (p as HTMLElement).innerText.trim()).filter(Boolean),
+    kapanis: t('.doc-close') || letter.value.kapanis,
+    saygi: t('.doc-sign-saygi') || letter.value.saygi,
+    adSoyad: t('.doc-sign-name') || letter.value.adSoyad,
+    ekBilgiler: Array.from(el.querySelectorAll('.doc-sign-extra'))
+      .map((d) => (d as HTMLElement).innerText.trim()).filter(Boolean)
+  }
 }
 
 async function onCopy() {
@@ -36,9 +60,18 @@ async function onCopy() {
   toast('Kopyalandı')
 }
 
-function onPrint() {
-  toast('Yazdırma penceresi açılıyor')
-  setTimeout(() => window.print(), 250)
+async function onDownloadPdf() {
+  const L = readEdited()
+  if (!L || downloading.value) return
+  downloading.value = true
+  toast('PDF hazırlanıyor')
+  try {
+    await downloadPdf(L, { sans: docSans.value })
+  } catch (_) {
+    toast('PDF oluşturulamadı')
+  } finally {
+    downloading.value = false
+  }
 }
 
 async function onRegenerate() {
@@ -99,9 +132,14 @@ async function onRegenerate() {
             <DilekceIcon :name="copied ? 'check' : 'copy'" :size="16" />
             {{ copied ? 'Kopyalandı' : 'Kopyala' }}
           </button>
-          <button type="button" class="act-btn act-btn--primary" @click="onPrint">
+          <button
+            type="button"
+            class="act-btn act-btn--primary"
+            :disabled="downloading"
+            @click="onDownloadPdf"
+          >
             <DilekceIcon name="download" :size="16" />
-            PDF olarak indir
+            {{ downloading ? 'Hazırlanıyor…' : 'PDF olarak indir' }}
           </button>
           <button type="button" class="act-btn act-btn--flush" @click="onRegenerate">
             <DilekceIcon name="refresh" :size="16" />
