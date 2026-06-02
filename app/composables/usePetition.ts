@@ -86,6 +86,7 @@ interface ApiError {
 
 export function usePetition() {
   const { request } = useApi()
+  const { trDate } = useTrDate()
 
   const form    = useState<DilekceForm>('yd-form',    () => (
     import.meta.dev
@@ -97,6 +98,9 @@ export function usePetition() {
   const loading = useState<boolean>('yd-loading', () => false)
   const error   = useState<string | null>('yd-error', () => null)
   const generationId = useState<string | null>('yd-gen-id', () => null)
+  // True when the LLM pass was skipped because the API was unreachable —
+  // /sonuc reads this to surface a quiet banner explaining the body is raw.
+  const aiSkipped = useState<boolean>('yd-ai-skipped', () => false)
 
   if (import.meta.client) {
     watch(form,    (v) => LS.set('yd_form', v),    { deep: true })
@@ -119,6 +123,7 @@ export function usePetition() {
 
   async function generate(): Promise<Letter | null> {
     error.value = null
+    aiSkipped.value = false
     loading.value = true
     try {
       const res = await request<{ letter: Letter; generation_id: string }>(
@@ -127,21 +132,37 @@ export function usePetition() {
       )
       letter.value = res.letter
       generationId.value = res.generation_id ?? null
-      const entry: HistoryEntry = {
-        id: Date.now().toString(36),
-        ts: Date.now(),
-        kategori: form.value.kategori,
-        konu: form.value.konu,
-        letter: res.letter
-      }
-      history.value = [entry, ...history.value].slice(0, 30)
+      recordHistory(res.letter)
       return res.letter
     } catch (e: unknown) {
+      // If the request never reached a server (Rails down, offline, CORS),
+      // fall back to a mechanically-formatted petition so the user can still
+      // ship their words on paper. Real API errors (validation, quota, 5xx)
+      // still surface in the errbar — only network-class failures degrade.
+      if (isUnreachable(e)) {
+        const fallback = buildFallbackLetter(form.value, trDate())
+        letter.value = fallback
+        generationId.value = null
+        aiSkipped.value = true
+        recordHistory(fallback)
+        return fallback
+      }
       error.value = formatApiError(e)
       return null
     } finally {
       loading.value = false
     }
+  }
+
+  function recordHistory(L: Letter) {
+    const entry: HistoryEntry = {
+      id: Date.now().toString(36),
+      ts: Date.now(),
+      kategori: form.value.kategori,
+      konu: form.value.konu,
+      letter: L
+    }
+    history.value = [entry, ...history.value].slice(0, 30)
   }
 
   const openHistory = (entry: HistoryEntry) => {
@@ -159,9 +180,41 @@ export function usePetition() {
   }
 
   return {
-    form, letter, history, loading, error, generationId,
+    form, letter, history, loading, error, generationId, aiSkipped,
     set, reset, isReady,
     generate, openHistory, deleteHistory
+  }
+}
+
+// Detect "the request never reached the backend" cases: Rails not running,
+// CORS preflight failure, DNS, offline. $fetch surfaces these without an
+// HTTP status since no response was ever received.
+function isUnreachable(e: unknown): boolean {
+  const err = e as { status?: number; statusCode?: number }
+  return err.status == null && err.statusCode == null
+}
+
+// Format the user's form into a Letter shape without any LLM rewriting.
+// Body becomes the user's own açıklama split on blank lines into paragraphs;
+// closing defaults to the neutral form. Honest and usable, not polished.
+function buildFallbackLetter(f: DilekceForm, tarih: string): Letter {
+  const paragraflar = f.aciklama
+    .split(/\n{2,}/)
+    .map((p) => p.replace(/\s+/g, ' ').trim())
+    .filter(Boolean)
+  return {
+    tarih,
+    makam: (f.makam || '').toUpperCase(),
+    birim: (f.birim || '').trim().toUpperCase(),
+    konu: f.konu.trim(),
+    paragraflar: paragraflar.length ? paragraflar : [f.aciklama.trim()],
+    kapanis: 'Gereğini bilgilerinize arz ederim.',
+    saygi: 'Saygılarımla,',
+    adSoyad: f.adSoyad.trim(),
+    ekBilgiler: (f.ekBilgiler || '')
+      .split('\n')
+      .map((s) => s.trim())
+      .filter(Boolean)
   }
 }
 
@@ -193,13 +246,6 @@ function formatApiError(e: unknown): string {
 
   if (status && status >= 500) {
     return 'Sunucu şu anda yanıt vermiyor. Lütfen birkaç dakika sonra tekrar deneyin.'
-  }
-
-  // No status means the fetch never reached the server (CORS, DNS, offline,
-  // Rails not running). Distinguish from "server replied with error" so the
-  // user knows to check their connection / backend.
-  if (status == null) {
-    return 'Sunucuya bağlanılamadı. Bağlantınızı veya servisin çalıştığını kontrol edin.'
   }
 
   return data.message || 'Dilekçe oluşturulurken bir sorun oluştu. Lütfen tekrar deneyin.'
