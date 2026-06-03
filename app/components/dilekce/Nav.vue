@@ -1,8 +1,5 @@
 <script setup lang="ts">
-const route = useRoute()
 const { theme, toggle } = useTheme()
-
-const isHistory = computed(() => route.path === '/gecmis')
 </script>
 
 <template>
@@ -21,10 +18,6 @@ const isHistory = computed(() => route.path === '/gecmis')
         >
           <DilekceIcon :name="theme === 'dark' ? 'sun' : 'moon'" :size="15" />
         </button>
-        <NuxtLink to="/gecmis" class="yd-nav-link" :class="{ 'is-on': isHistory }">
-          <DilekceIcon name="clock" :size="15" />
-          <span>Geçmiş</span>
-        </NuxtLink>
         <NuxtLink to="/olustur" class="yd-nav-link yd-nav-cta">
           <DilekceIcon name="sparkle" :size="15" />
           <span>Yeni dilekçe</span>
