@@ -39,7 +39,8 @@ function readEdited(): Letter | null {
     saygi: t('.doc-sign-saygi') || letter.value.saygi,
     adSoyad: t('.doc-sign-name') || letter.value.adSoyad,
     ekBilgiler: Array.from(el.querySelectorAll('.doc-sign-extra'))
-      .map((d) => (d as HTMLElement).innerText.trim()).filter(Boolean)
+      .map((d) => (d as HTMLElement).innerText.trim()).filter(Boolean),
+    eksikler: letter.value.eksikler ?? []
   }
 }
 
@@ -100,6 +101,24 @@ async function onRegenerate() {
             <strong>Yapay zeka düzenleyici şu anda erişilemiyor.</strong>
             Metin sizden geldiği gibi gösterildi; dilerseniz aşağıdaki paragrafları
             elle düzenleyebilirsiniz.
+          </div>
+        </div>
+
+        <div
+          v-if="(letter.eksikler?.length ?? 0) > 0"
+          class="result-notice result-notice--missing"
+          role="status"
+        >
+          <DilekceIcon name="shield" :size="14" />
+          <div>
+            <strong>Eksik bilgi olabilir.</strong>
+            Dilekçeniz hazır, ancak şu bilgileri eklerseniz daha etkili olur:
+            <ul class="result-notice-list">
+              <li v-for="(item, i) in letter.eksikler" :key="i">{{ item }}</li>
+            </ul>
+            <NuxtLink to="/olustur" class="result-notice-link">
+              Açıklamayı düzenle
+            </NuxtLink>
           </div>
         </div>
 

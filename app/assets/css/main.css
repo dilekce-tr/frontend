@@ -789,6 +789,21 @@ a:hover { color: var(--accent-hover); text-decoration: underline; text-underline
 }
 .result-notice strong { font-weight: 600; color: var(--warning); margin-right: 4px; }
 .result-notice svg { flex: 0 0 auto; margin-top: 2px; }
+.result-notice-list {
+  margin: 6px 0 8px;
+  padding-left: 20px;
+  display: grid; gap: 2px;
+}
+.result-notice-list li { font-size: 13px; line-height: 1.5; }
+.result-notice-link {
+  display: inline-block;
+  margin-top: 2px;
+  font-weight: 600;
+  color: var(--warning);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.result-notice-link:hover { color: var(--warning); opacity: 0.85; }
 
 .doc {
   position: relative;

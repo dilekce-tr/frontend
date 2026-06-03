@@ -23,6 +23,11 @@ export interface Letter {
   saygi: string
   adSoyad: string
   ekBilgiler: string[]
+  // Short Turkish notes the LLM emits when the user's aciklama is missing
+  // a concrete fact the petition would need (address, order number, date,
+  // …). Always an array; empty when nothing is missing. Rendered as an
+  // amber notice above the document.
+  eksikler: string[]
 }
 
 export interface HistoryEntry {
@@ -214,7 +219,8 @@ function buildFallbackLetter(f: DilekceForm, tarih: string): Letter {
     ekBilgiler: (f.ekBilgiler || '')
       .split('\n')
       .map((s) => s.trim())
-      .filter(Boolean)
+      .filter(Boolean),
+    eksikler: []
   }
 }
 
