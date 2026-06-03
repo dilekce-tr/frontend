@@ -20,7 +20,68 @@ export default defineNuxtConfig({
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: 'Resmî dilekçenizi dakikalar içinde yazın. Durumunuzu birkaç cümleyle anlatın; yapay zeka resmî biçimde dilekçe hazırlasın.' }
+        { name: 'description', content: 'Resmî dilekçenizi dakikalar içinde yazın. Durumunuzu birkaç cümleyle anlatın; yapay zeka resmî biçimde dilekçe hazırlasın.' },
+        { name: 'theme-color', content: '#1B6E50' },
+
+        // Open Graph — how Facebook, WhatsApp, LinkedIn, iMessage render the link.
+        { property: 'og:type', content: 'website' },
+        { property: 'og:site_name', content: 'YazbirDilekçe' },
+        { property: 'og:title', content: 'YazbirDilekçe — Resmî dilekçenizi dakikalar içinde yazın' },
+        { property: 'og:description', content: 'Durumunuzu birkaç cümleyle anlatın; yapay zekâ resmî biçimde dilekçe hazırlasın. Belediye, iş, kira, okul, tüketici şikayeti ve daha fazlası.' },
+        { property: 'og:url', content: 'https://yazbirdilekce.com/' },
+        { property: 'og:locale', content: 'tr_TR' },
+        { property: 'og:image', content: 'https://yazbirdilekce.com/og-image.png' },
+        { property: 'og:image:width', content: '1200' },
+        { property: 'og:image:height', content: '630' },
+        { property: 'og:image:alt', content: 'YazbirDilekçe — resmî dilekçe örneği' },
+
+        // Twitter / X — `summary_large_image` widens the card to a hero crop.
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:title', content: 'YazbirDilekçe — Resmî dilekçenizi dakikalar içinde yazın' },
+        { name: 'twitter:description', content: 'Durumunuzu birkaç cümleyle anlatın; yapay zekâ resmî biçimde dilekçe hazırlasın.' },
+        { name: 'twitter:image', content: 'https://yazbirdilekce.com/og-image.png' }
+      ],
+      link: [
+        // SVG first for modern browsers; .ico is the legacy fallback. Apple
+        // touch icon doubles as the iOS home-screen icon.
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+        { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32.png' },
+        { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16.png' },
+        { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
+        { rel: 'shortcut icon', href: '/favicon.ico' },
+        // Canonical defaults to the apex domain. Per-page useSeoMeta calls
+        // can override this with a more specific path.
+        { rel: 'canonical', href: 'https://yazbirdilekce.com/' }
+      ],
+      script: [
+        // JSON-LD: Organization + WebSite. Gives Google an entity to attach
+        // to the result, and the WebSite block enables the sitelinks
+        // search box once the site is indexed.
+        {
+          type: 'application/ld+json',
+          innerHTML: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@graph': [
+              {
+                '@type': 'Organization',
+                '@id': 'https://yazbirdilekce.com/#organization',
+                name: 'YazbirDilekçe',
+                url: 'https://yazbirdilekce.com/',
+                logo: 'https://yazbirdilekce.com/icon-512.png',
+                description: 'Resmî dilekçenizi dakikalar içinde yazın. Yapay zekâ destekli Türkçe dilekçe asistanı.'
+              },
+              {
+                '@type': 'WebSite',
+                '@id': 'https://yazbirdilekce.com/#website',
+                url: 'https://yazbirdilekce.com/',
+                name: 'YazbirDilekçe',
+                description: 'Resmî dilekçenizi dakikalar içinde yazın.',
+                inLanguage: 'tr-TR',
+                publisher: { '@id': 'https://yazbirdilekce.com/#organization' }
+              }
+            ]
+          })
+        }
       ]
     }
   },

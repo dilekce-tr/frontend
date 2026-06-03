@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FAFAF8"/>
+      <stop offset="100%" stop-color="#F1F3EE"/>
+    </linearGradient>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#F8F8F4"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Decorative document on the right -->
+  <g transform="translate(720, 90) rotate(2)">
+    <rect width="380" height="450" rx="14" fill="url(#paper)" stroke="#E1E1DC" stroke-width="1"/>
+    <text x="340" y="44" font-family="JetBrains Mono, monospace" font-size="13" fill="#9CA0AB" text-anchor="end">6 Haziran 2026</text>
+    <text x="32" y="92" font-family="Space Grotesk, sans-serif" font-weight="600" font-size="18" fill="#14141C">İZMİR BÜYÜKŞEHİR</text>
+    <text x="32" y="116" font-family="Space Grotesk, sans-serif" font-weight="600" font-size="18" fill="#14141C">BELEDİYESİ BAŞKANLIĞINA</text>
+    <rect x="32" y="148" width="280" height="8" rx="4" fill="#ECECE6"/>
+    <rect x="32" y="168" width="260" height="8" rx="4" fill="#ECECE6"/>
+    <rect x="32" y="188" width="296" height="8" rx="4" fill="#ECECE6"/>
+    <rect x="32" y="208" width="210" height="8" rx="4" fill="#ECECE6"/>
+    <rect x="32" y="228" width="270" height="8" rx="4" fill="#ECECE6"/>
+    <rect x="32" y="248" width="180" height="8" rx="4" fill="#ECECE6"/>
+    <text x="32" y="320" font-family="Space Grotesk, sans-serif" font-size="14" fill="#5B5F6B">Gereğini bilgilerinize arz ederim.</text>
+    <rect x="32" y="372" width="92" height="1.5" fill="#9CA0AB"/>
+    <text x="32" y="396" font-family="Space Grotesk, sans-serif" font-size="13" fill="#9CA0AB">Ad Soyad</text>
+  </g>
+
+  <!-- Brand mark -->
+  <g transform="translate(72, 92)">
+    <rect width="56" height="56" rx="13" fill="#1B6E50"/>
+    <path d="M16 16 L28 32 L40 16 M28 32 L28 42" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
+  <text x="142" y="130" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="26" fill="#14141C">YazbirDilekçe</text>
+
+  <!-- Hero copy -->
+  <text x="72" y="280" font-family="Instrument Serif, serif" font-size="76" fill="#14141C">Resmî dilekçenizi</text>
+  <text x="72" y="364" font-family="Instrument Serif, serif" font-size="76" fill="#14141C">
+    <tspan font-style="italic" fill="#1B6E50">dakikalar</tspan>
+    <tspan> içinde yazın.</tspan>
+  </text>
+
+  <text x="72" y="442" font-family="Space Grotesk, sans-serif" font-size="22" fill="#5B5F6B">
+    Durumunuzu birkaç cümleyle anlatın,
+  </text>
+  <text x="72" y="472" font-family="Space Grotesk, sans-serif" font-size="22" fill="#5B5F6B">
+    yapay zekâ resmî biçimde hazırlasın.
+  </text>
+
+  <!-- Footer disclaimer -->
+  <text x="72" y="568" font-family="JetBrains Mono, monospace" font-size="13" fill="#9CA0AB" letter-spacing="0.04em">YAZBIRDILEKCE.COM</text>
+  <text x="72" y="588" font-family="Space Grotesk, sans-serif" font-size="13" fill="#9CA0AB">Hukuki tavsiye değildir</text>
+</svg>

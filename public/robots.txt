@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /olustur
+Disallow: /sonuc
+Disallow: /panel
+Disallow: /gecmis
+Disallow: /ayarlar
+Disallow: /plan
+
+Sitemap: https://yazbirdilekce.com/sitemap.xml
