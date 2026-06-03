@@ -9,6 +9,7 @@ if (process.env.NODE_ENV !== 'production' && process.platform === 'darwin' && !p
 }
 
 export default defineNuxtConfig({
+  modules: ['@vercel/analytics'],
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
