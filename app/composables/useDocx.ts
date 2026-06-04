@@ -26,11 +26,18 @@ export function useDocx() {
     const bodyFont = opts.sans ? 'Calibri' : 'Cambria'
     const headingFont = 'Calibri'
 
+    // Line height in twips (1/20 pt). 360 ≈ 1.5x of 11pt — relaxed body
+    // reading. Section gaps below are done with empty paragraphs instead
+    // of spacing.after, because Apple Pages doesn't honour `after`
+    // reliably while Word and LibreOffice are flexible either way.
+    const LINE_HEIGHT = 360
+
     const para = (
       text: string | (typeof TextRun)['prototype'][],
       o: {
         align?: 'left' | 'right' | 'center' | 'justify'
         spacingAfter?: number
+        spacingBefore?: number
         bold?: boolean
         font?: string
         size?: number
@@ -43,7 +50,11 @@ export function useDocx() {
         center: AlignmentType.CENTER,
         justify: AlignmentType.JUSTIFIED
       } as const)[o.align ?? 'left'],
-      spacing: { after: o.spacingAfter ?? 200, line: 320 },
+      spacing: {
+        before: o.spacingBefore ?? 0,
+        after: o.spacingAfter ?? PARA_GAP,
+        line: LINE_HEIGHT
+      },
       children: typeof text === 'string'
         ? [new TextRun({
             text,
@@ -57,56 +68,84 @@ export function useDocx() {
 
     const paragraphs: (typeof Paragraph)['prototype'][] = []
 
-    // Date — right-aligned, muted, mono-ish (Calibri at 10pt is fine).
-    paragraphs.push(para(letter.tarih, { align: 'right', size: 20, color: '555555', spacingAfter: 360 }))
-
-    // Makam — uppercase address, bold, sans.
-    paragraphs.push(para(letter.makam, {
-      bold: true, font: headingFont, size: 22,
-      spacingAfter: letter.birim ? 80 : 360
-    }))
-
-    if (letter.birim) {
-      paragraphs.push(para(letter.birim, {
-        font: headingFont, size: 20, color: '555555', spacingAfter: 360
-      }))
+    // Apple Pages collapses paragraph spacing.after in many cases — it
+    // honours empty paragraphs but not always the `after` attribute on a
+    // content paragraph. Word and LibreOffice respect `after` fine, but
+    // we want one rendering that looks right everywhere. So we insert
+    // real empty paragraphs between sections instead of relying on
+    // spacing.after for the breaks.
+    const blank = (n = 1) => {
+      for (let i = 0; i < n; i++) {
+        paragraphs.push(new Paragraph({
+          spacing: { before: 0, after: 0, line: LINE_HEIGHT },
+          children: [new TextRun({ text: '' })]
+        }))
+      }
     }
 
+    // Date — right-aligned, muted.
+    paragraphs.push(para(letter.tarih, {
+      align: 'right', size: 20, color: '555555', spacingAfter: 0
+    }))
+    blank(2)
+
+    // Makam — uppercase address, bold, sans. Birim immediately under it
+    // when present so they read as one header block.
+    paragraphs.push(para(letter.makam, {
+      bold: true, font: headingFont, size: 22, spacingAfter: 0
+    }))
+    if (letter.birim) {
+      paragraphs.push(para(letter.birim, {
+        font: headingFont, size: 20, color: '555555', spacingAfter: 0
+      }))
+    }
+    blank(2)
+
+    // Konu — own section.
     if (letter.konu) {
       paragraphs.push(new Paragraph({
-        spacing: { after: 280, line: 320 },
+        spacing: { before: 0, after: 0, line: LINE_HEIGHT },
         children: [
           new TextRun({ text: 'Konu: ', bold: true, font: headingFont, size: 22 }),
           new TextRun({ text: letter.konu, font: bodyFont, size: 22 })
         ]
       }))
+      blank(2)
     }
 
-    for (const p of letter.paragraflar) {
-      paragraphs.push(para(p, { align: 'justify', spacingAfter: 220 }))
-    }
+    // Body paragraphs — one blank between them, two blanks after the
+    // last one to set kapanış apart.
+    letter.paragraflar.forEach((p, idx) => {
+      paragraphs.push(para(p, { align: 'justify', spacingAfter: 0 }))
+      const isLast = idx === letter.paragraflar.length - 1
+      blank(isLast ? 2 : 1)
+    })
 
-    paragraphs.push(para(letter.kapanis, { spacingAfter: 480 }))
-    paragraphs.push(para(letter.saygi, { align: 'right', spacingAfter: 360 }))
+    paragraphs.push(para(letter.kapanis, { spacingAfter: 0 }))
+    blank(2)
 
-    // Signature underline — Word doesn't draw lines as canvas; the
-    // cleanest cross-renderer trick is a right-aligned line of underscores
-    // styled as bottom-border on an empty paragraph. We just use a short
-    // run of figure spaces with a bottom border so it renders consistently.
+    paragraphs.push(para(letter.saygi, {
+      align: 'right', spacingAfter: 0
+    }))
+    blank(2)
+
+    // Signature underline — bottom-border paragraph. A blank line
+    // immediately after gives the printed name room to sit cleanly.
     paragraphs.push(new Paragraph({
       alignment: AlignmentType.RIGHT,
-      spacing: { after: 60 },
+      spacing: { before: 0, after: 0, line: LINE_HEIGHT },
       border: {
         bottom: { style: BorderStyle.SINGLE, size: 6, color: '888888', space: 1 }
       },
-      children: [new TextRun({ text: '                              ' })]
+      children: [new TextRun({ text: ' '.repeat(40) })]
     }))
     paragraphs.push(para(letter.adSoyad, {
-      align: 'right', font: headingFont, size: 22, spacingAfter: 80
+      align: 'right', font: headingFont, size: 22, spacingAfter: 0
     }))
     for (const line of (letter.ekBilgiler || [])) {
       paragraphs.push(para(line, {
-        align: 'right', font: headingFont, size: 20, color: '555555', spacingAfter: 60
+        align: 'right', font: headingFont, size: 20, color: '555555',
+        spacingAfter: 0
       }))
     }
 
