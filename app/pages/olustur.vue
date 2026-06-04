@@ -8,9 +8,10 @@ const submitAttempted = ref(false)
 
 // Pre-fill the form from query params so deep-links from /ornekler pages
 // (and any future "start with this example" CTAs) land the user in a
-// populated generator. Only fields the user can also type are accepted;
-// adSoyad and aciklama are intentionally not pre-fillable so we don't
-// put words in the user's mouth.
+// populated generator. adSoyad stays opt-in (never pre-fill someone's
+// name) but aciklama IS accepted — the example's everyday-Turkish source
+// story gives the user a complete draft to edit, which matches user
+// expectation when clicking "Bu örneği kendi durumunuza göre düzenleyin".
 const ALLOWED_CATEGORIES: readonly CategoryId[] = [
   'is', 'kira', 'belediye', 'okul', 'tuketici', 'izin', 'itiraz', 'diger'
 ] as const
@@ -20,8 +21,9 @@ onMounted(() => {
   if (kategori && (ALLOWED_CATEGORIES as readonly string[]).includes(kategori)) {
     set('kategori', kategori as CategoryId)
   }
-  if (typeof q.makam === 'string' && q.makam.trim()) set('makam', q.makam.trim())
-  if (typeof q.konu === 'string' && q.konu.trim())   set('konu', q.konu.trim())
+  if (typeof q.makam === 'string'    && q.makam.trim())    set('makam',    q.makam.trim())
+  if (typeof q.konu === 'string'     && q.konu.trim())     set('konu',     q.konu.trim())
+  if (typeof q.aciklama === 'string' && q.aciklama.trim()) set('aciklama', q.aciklama.trim())
 })
 
 const invalid = computed(() => ({

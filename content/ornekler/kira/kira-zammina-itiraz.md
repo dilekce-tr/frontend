@@ -3,6 +3,12 @@ kategori: kira
 slug: kira-zammina-itiraz
 title: Kira Zammına İtiraz Dilekçe Örneği
 konu: Talep edilen kira artışına itiraz
+aciklama: |
+  01.09.2023'ten beri Bostanlı'daki dairede kiracıyım. Ev sahibim sözleşme
+  yenileme döneminde TÜFE oranının çok üzerinde bir zam istedi. Yasal sınır
+  TÜFE 12 aylık ortalaması olmasına rağmen ev sahibim bu sınırı kabul
+  etmiyor. Zammın TÜFE oranıyla sınırlandırılmasını ve kiracılık
+  ilişkimizin sürdürülmesini talep ediyorum.
 description: Ev sahibinin yasal sınırların üzerindeki kira zammına itiraz etmek için resmî dilekçe örneği. TÜFE oranını gerekçe gösterir, çözüm önerisi sunar.
 keywords:
   - kira zammı itiraz dilekçesi

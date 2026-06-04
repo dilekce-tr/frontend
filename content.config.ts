@@ -20,6 +20,11 @@ export default defineContentConfig({
         slug: z.string(),
         title: z.string(),         // H1 (e.g. "Kombi Arızası Dilekçe Örneği")
         konu: z.string(),          // Pre-filled into /olustur?konu=...
+        // Optional everyday-Turkish source story for the example. When
+        // present, the "Bu örneği özelleştir" CTA also pre-fills the form's
+        // `aciklama` field so the user lands on a complete draft they can
+        // edit, rather than typing from scratch.
+        aciklama: z.string().optional(),
         // SEO
         description: z.string(),   // Meta description
         keywords: z.array(z.string()).optional(),

@@ -3,6 +3,11 @@ kategori: belediye
 slug: cop-toplama-aksamasi
 title: Çöp Toplama Aksaması Dilekçe Örneği
 konu: Mahallede çöp toplama hizmetinin düzensizliği
+aciklama: |
+  Mahallemizde çöpler son üç haftadır düzenli toplanmıyor. Konteynerler
+  taşıyor, koku ve sinek sorunu başladı. Beyaz Masa'ya birkaç kez başvurdum
+  ama düzelmedi. Adresim Yakacık Mahallesi 4267. Sokak, Kartal/İstanbul.
+  Çöplerin ilan edilen saatlerde düzenli olarak toplanmasını istiyorum.
 description: Belediyeye düzensiz çöp toplama hizmeti için resmî dilekçe örneği. Hijyen ve çevre sağlığı gerekçeleriyle hazırlanmış, kişiselleştirmeye hazır.
 keywords:
   - çöp toplama dilekçe örneği

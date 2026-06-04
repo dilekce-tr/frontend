@@ -28,6 +28,10 @@ const customizeHref = computed(() => {
     makam: ex.letter.makam,
     konu: ex.konu
   })
+  // Examples carry an optional `aciklama` — the everyday-Turkish source
+  // story. When present, hand it to /olustur so the user lands on a
+  // pre-filled body they can edit instead of starting blank.
+  if (ex.aciklama) q.set('aciklama', ex.aciklama)
   return `/olustur?${q.toString()}`
 })
 

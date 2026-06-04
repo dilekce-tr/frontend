@@ -3,6 +3,13 @@ kategori: itiraz
 slug: trafik-cezasina-itiraz
 title: Trafik Cezasına İtiraz Dilekçe Örneği
 konu: Trafik idari para cezasına itiraz
+aciklama: |
+  35 ZA 1234 plakalı aracıma 02.06.2026 tarihinde hız sınırı aşımı gerekçesi
+  ile bir trafik cezası kesilmiş. Tutanak numarası TR-2026-0001234, ceza
+  tarafıma 04.06.2026'da tebliğ edildi. Söz konusu yol için levhalardaki
+  geçici hız sınırı uygulaması artık bitmişti, ayrıca aracımdaki sürat
+  göstergesi tutanaktaki değerle uyuşmuyor. Cezanın iptal edilmesini talep
+  ediyorum.
 description: Haksız bulduğunuz trafik cezasına itiraz etmek için Sulh Ceza Hâkimliği'ne yazılacak resmî dilekçe örneği. 15 günlük itiraz süresine dikkat.
 keywords:
   - trafik cezası itiraz dilekçesi

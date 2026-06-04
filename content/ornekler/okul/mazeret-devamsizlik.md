@@ -3,6 +3,11 @@ kategori: okul
 slug: mazeret-devamsizlik
 title: Okul Mazeret Dilekçesi Örneği
 konu: Mazeretli devamsızlık bildirimi
+aciklama: |
+  Kızım Elif Demir, lisenin 11-B sınıfında 1247 numaralı öğrenci. 02.06.2026
+  – 05.06.2026 tarihleri arasında geçirdiği rahatsızlık nedeniyle okula
+  gelemedi. Tabip raporu elimde. Bu günlerin mazeretli sayılmasını ve
+  kaçırdığı dersler için telafi imkanı sağlanmasını rica ediyorum.
 description: Okula mazeret nedeniyle devamsızlık için resmî dilekçe örneği. Sağlık, aile veya zorunlu hâller için. İndirin, kişiselleştirin veya hızlıca kendi dilekçenizi hazırlayın.
 keywords:
   - okul mazeret dilekçesi

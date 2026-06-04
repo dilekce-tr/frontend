@@ -3,6 +3,13 @@ kategori: itiraz
 slug: sinav-sonucuna-itiraz
 title: Sınav Sonucuna İtiraz Dilekçesi Örneği
 konu: Sınav sorusu veya değerlendirme sonucuna itiraz
+aciklama: |
+  Mühendislik Fakültesi Elektrik-Elektronik 2024401045 numaralı öğrenciyim.
+  2026 Bahar dönemi MATH 202 Diferansiyel Denklemler vize sınavımdan 35/100
+  aldım. 4. sorunun (c) şıkkını derste anlatılan yöntemle çözdüm ama sıfır
+  verildi; 6. soruda sadece son cümlede rasyonel ifade hatası vardı ama
+  yine sıfır verildi. Sınav kâğıdımın yeniden değerlendirilmesini talep
+  ediyorum.
 description: ÖSYM, üniversite veya okul sınav sonucuna itiraz etmek için resmî dilekçe örneği. Soru veya değerlendirme hatası gerekçesi ile birlikte.
 keywords:
   - sınav sonucuna itiraz dilekçesi

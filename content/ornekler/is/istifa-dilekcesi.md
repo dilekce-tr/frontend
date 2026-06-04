@@ -3,6 +3,11 @@ kategori: is
 slug: istifa-dilekcesi
 title: İstifa Dilekçesi Örneği
 konu: İş akdinin feshi talebi
+aciklama: |
+  Şirkette 12.03.2023'ten beri Yazılım Geliştirme Uzmanı olarak çalışıyorum.
+  Kişisel sebeplerle istifa etmek istiyorum. İhbar süresine uyacağım, devir
+  teslimi düzgün yapacağım. Sicil numaram 4521. İstifamın kabul edilmesini
+  ve özlük haklarımın ödenmesini talep ediyorum.
 description: İşverene yazılacak resmî istifa dilekçesi örneği. İhbar süresine uygun, saygılı ve net bir biçimde. İndirin, kişiselleştirin veya kendi dilekçenizi hazırlayın.
 keywords:
   - istifa dilekçesi örneği

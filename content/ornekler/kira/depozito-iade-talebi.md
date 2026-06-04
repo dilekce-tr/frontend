@@ -3,6 +3,12 @@ kategori: kira
 slug: depozito-iade-talebi
 title: Depozito İade Talebi Dilekçe Örneği
 konu: Kira depozitosunun iadesi talebi
+aciklama: |
+  01.06.2024 – 31.05.2026 arasında Bornova'da oturdum, 31.05.2026'da evi
+  eksiksiz teslim ettim. 2 aylık kira tutarında 25.000 TL depozito vermiştim.
+  Hasar tutanağı düzenlenmedi, faturalarımı ödedim ama bir aydan fazla
+  zamandır depozito iade edilmedi. 7 gün içinde IBAN'ıma iade edilmesini
+  istiyorum, aksi halde dava açacağım.
 description: Eski ev sahibinden depozito iadesi talep etmek için resmî dilekçe örneği. Konutu boşaltma tarihi ve eksiksiz teslim koşulları belgelenmiş.
 keywords:
   - depozito iade dilekçesi

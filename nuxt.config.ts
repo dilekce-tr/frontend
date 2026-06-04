@@ -102,6 +102,38 @@ export default defineNuxtConfig({
     '/ayarlar':     { ssr: false },
     '/plan':        { ssr: false },
     '/sonuc':       { ssr: false },
-    '/olustur':     { ssr: false }
+    '/olustur':     { ssr: false },
+    // Prerender every ornekler page to static HTML at build time. Two
+    // reasons: (1) @nuxt/content uses better-sqlite3 which doesn't ship a
+    // native binary inside Vercel's serverless function bundle, so a
+    // runtime queryCollection() silently returns []. (2) these pages
+    // change rarely and benefit from being plain files on the edge.
+    '/ornekler':                 { prerender: true },
+    '/ornekler/**':              { prerender: true }
+  },
+  // Prerender the örnekler index and every example detail page. We pre-list
+  // each URL explicitly rather than enabling crawlLinks: true so the
+  // prerenderer doesn't wander into the rest of the site (which may still
+  // have stale links during development). When adding a new example md
+  // file, append its route here.
+  nitro: {
+    prerender: {
+      failOnError: true,
+      routes: [
+        '/ornekler',
+        '/ornekler/belediye/sokak-lambasi-arizasi',
+        '/ornekler/belediye/cop-toplama-aksamasi',
+        '/ornekler/is/istifa-dilekcesi',
+        '/ornekler/is/yillik-izin-talebi',
+        '/ornekler/kira/kira-zammina-itiraz',
+        '/ornekler/kira/depozito-iade-talebi',
+        '/ornekler/okul/mazeret-devamsizlik',
+        '/ornekler/okul/burs-basvurusu',
+        '/ornekler/tuketici/kombi-arizasi',
+        '/ornekler/tuketici/arizali-urun-iadesi',
+        '/ornekler/itiraz/trafik-cezasina-itiraz',
+        '/ornekler/itiraz/sinav-sonucuna-itiraz'
+      ]
+    }
   }
 })

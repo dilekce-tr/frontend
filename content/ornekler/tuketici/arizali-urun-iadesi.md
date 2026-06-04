@@ -3,6 +3,13 @@ kategori: tuketici
 slug: arizali-urun-iadesi
 title: Arızalı Ürün İade Dilekçesi Örneği
 konu: Arızalı ürün için iade ve bedel iade talebi
+aciklama: |
+  15.04.2026'da web sitenizden XYZ marka kablosuz kulaklık aldım (sipariş
+  TR-2026-7892341). Ürün 22.04.2026'da geldi. İlk kullandığımdan beri
+  sağ kulağı kesik kesik çalıyor, şarjı da belirtilenden çok daha kısa
+  gidiyor. Müşteri hizmetlerini aradım ama çözüm sunamadılar. 6502 sayılı
+  kanun kapsamında ürünü iade edip 4.299 TL'nin IBAN'ıma iade edilmesini
+  talep ediyorum.
 description: Garanti süresi içinde arızalı ürün için satıcıya veya üreticiye yazılacak iade talep dilekçesi. 6502 sayılı Tüketici Kanunu çerçevesinde.
 keywords:
   - arızalı ürün iade dilekçesi

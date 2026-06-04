@@ -3,6 +3,12 @@ kategori: is
 slug: yillik-izin-talebi
 title: Yıllık İzin Talep Dilekçesi Örneği
 konu: Yıllık ücretli izin talebi
+aciklama: |
+  Şirkette 15.08.2022'den beri Müşteri İlişkileri Uzmanı olarak çalışıyorum.
+  15.07.2026 – 31.07.2026 arasında (12 iş günü) yıllık iznimi kullanmak
+  istiyorum. Devir teslim notlarını bir hafta önce hazırlayacağım, izinde
+  Selin Demir bana vekalet edecek. Sicil numaram 2814. İzin talebimin
+  onaylanmasını rica ediyorum.
 description: İşverene yıllık ücretli izin talebi için resmî dilekçe örneği. Tarih aralığı belirtilmiş, devir-teslim sorumluluğu üstlenilmiş, kişiselleştirmeye hazır.
 keywords:
   - yıllık izin dilekçesi

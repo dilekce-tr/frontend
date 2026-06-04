@@ -3,6 +3,12 @@ kategori: tuketici
 slug: kombi-arizasi
 title: Kombi Arızası Dilekçe Örneği
 konu: Kombi arızasının giderilmesi ve fatura indirimi talebi
+aciklama: |
+  Evdeki kombi 3 gündür çalışmıyor. Küçük çocuğum hasta, sıcak suyumuz da yok.
+  Müşteri hizmetlerini defalarca aradım, her seferinde bugün gelecekler dediler
+  ama kimse gelmedi. Abonelik numaramız 1234567, adresim Konak/İzmir. Acilen
+  bir teknisyen gönderilmesini ve kaybedilen günler için faturamdan indirim
+  yapılmasını istiyorum.
 description: Doğalgaz dağıtım şirketine kombi arızası için resmî dilekçe örneği. İndirin, kişiselleştirin veya birkaç cümleyle kendi dilekçenizi hazırlayın.
 keywords:
   - kombi arızası dilekçe örneği

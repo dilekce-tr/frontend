@@ -3,6 +3,12 @@ kategori: okul
 slug: burs-basvurusu
 title: Üniversite Burs Başvuru Dilekçesi Örneği
 konu: Lisans öğrencisi olarak burs başvurusu
+aciklama: |
+  Boğaziçi Üniversitesi Elektrik-Elektronik Mühendisliği 2. sınıf
+  öğrencisiyim, ortalamam 3.67. Babamı kaybettim, ailem üzerimde maddi
+  yük olarak kaldı. Yarı zamanlı çalışıyorum ama hem okul başarımı koruyup
+  hem ailemin yükünü hafifletmek için bursunuza ihtiyacım var. 2026-2027
+  eğitim yılı için burs başvurumun değerlendirilmesini rica ediyorum.
 description: Üniversite öğrencisinin vakıf veya kuruma yapacağı burs başvurusu için resmî dilekçe örneği. Akademik durum ve mali ihtiyaç gerekçeleri açıklanmış.
 keywords:
   - burs başvuru dilekçesi

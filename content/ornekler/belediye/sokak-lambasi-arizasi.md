@@ -3,6 +3,11 @@ kategori: belediye
 slug: sokak-lambasi-arizasi
 title: Sokak Lambası Arızası Dilekçe Örneği
 konu: Sokak aydınlatmasının onarılması talebi
+aciklama: |
+  Sokağımızda iki tane lamba üç haftadır yanmıyor. Akşamları sokak çok karanlık
+  oluyor, özellikle yaşlı komşularımız ve okul dönüşü çocuklar için tehlikeli.
+  Daha önce telefonla aradık ama kimse gelmedi. Adres: Güzeltepe Mahallesi
+  1453. Sokak, Konak/İzmir. Lambaların acilen tamir edilmesini istiyoruz.
 description: Belediyeye sokak lambası arızası için resmî dilekçe örneği. İndirin, kişiselleştirin veya birkaç cümleyle kendi dilekçenizi hazırlayın.
 keywords:
   - sokak lambası dilekçe örneği
