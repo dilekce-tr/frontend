@@ -13,7 +13,7 @@ const SECTIONS: Section[] = [
 
 const PRINCIPLES = [
   { title: 'Sakin, gürültüsüz', body: 'Düzgün bir araç gibi hissettirsin. Maskot yok, sizi sıkıştıran rozetler yok, agresif çağrılar yok.' },
-  { title: 'Dürüst fiyatlandırma', body: 'Gerçekten işe yarayan bir ücretsiz plan; 7 gün sonra kapanan bir oltalama değil.' },
+  { title: 'Şimdilik tamamen ücretsiz', body: 'Plan yok, üyelik zorunluluğu yok, ücretli sınır yok. Bir gün kullanım yoğunlaşırsa sürdürülebilir bir ücretsiz plan + opsiyonel destek aboneliği planlıyorum.' },
   { title: 'İstediğiniz an iptal', body: 'Dönem sonuna kadar erişiminiz kalır; ne soru ne geri kazanma e-postası.' },
   { title: 'Veriniz size aittir', body: 'Dilekçelerinizi satmıyoruz, model eğitiminde kullanmıyoruz. Dışa aktarın veya silin.' }
 ]
@@ -195,8 +195,8 @@ const PRINCIPLES = [
         </header>
 
         <p>
-          Bir dilekçe yanlış çıktıysa, ödeme yapmak isteyeceğiniz bir
-          özellik eksikse, YazbirDilekçe çöktüyse — lütfen bana
+          Bir dilekçe yanlış çıktıysa, eksik bulduğunuz bir özellik varsa,
+          YazbirDilekçe çöktüyse — lütfen bana
           <a href="mailto:gokhan@sylow.net">yazın</a>.
           Her mesajı bizzat okuyorum.
         </p>
