@@ -1,6 +1,4 @@
-<script setup lang="ts">
-const { theme, toggle } = useTheme()
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <header class="yd-nav">
@@ -10,14 +8,10 @@ const { theme, toggle } = useTheme()
         <span class="yd-wm-dot" aria-hidden="true" />
       </NuxtLink>
       <nav class="yd-nav-right">
-        <button
-          class="yd-nav-link"
-          type="button"
-          :aria-label="theme === 'dark' ? 'Açık tema' : 'Koyu tema'"
-          @click="toggle"
-        >
-          <DilekceIcon :name="theme === 'dark' ? 'sun' : 'moon'" :size="15" />
-        </button>
+        <NuxtLink to="/iletisim" class="yd-nav-link">
+          <span>İletişim</span>
+        </NuxtLink>
+        <span class="yd-nav-sep" aria-hidden="true">|</span>
         <NuxtLink to="/olustur" class="yd-nav-link yd-nav-cta">
           <DilekceIcon name="sparkle" :size="15" />
           <span>Yeni dilekçe</span>
