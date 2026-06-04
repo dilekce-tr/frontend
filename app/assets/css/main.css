@@ -1048,6 +1048,34 @@ a:hover { color: var(--accent-hover); text-decoration: underline; text-underline
 }
 .toast.is-show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+/* ── Phone tightening ───────────────────────────────────────────────────
+   At rest the page has 20px side padding and every card/section adds
+   another 20-56px inside. On a 375px phone that compounds to ~50%
+   gutters and content feels cramped. Pull both layers in on narrow
+   screens so the form fields, document preview, and example rows
+   actually reach close to the edge. */
+@media (max-width: 640px) {
+  .yd-page { padding: 24px 12px 64px; }
+
+  /* Generator card — shrink question padding and drop the 32px hanging
+     indent on .gen-q-body/.gen-q-hint so inputs go full-width. The
+     number badge in .gen-q-head stays paired with the label; the body
+     just no longer hangs off it. */
+  .gen-q { padding: 18px 14px; }
+  .gen-q-hint { margin-left: 0; }
+  .gen-q-body { margin-left: 0; }
+
+  /* Result page document — the 48/56 print-style padding was way too
+     much on mobile; this halves it so paragraphs breathe. */
+  .doc-body { padding: 28px 18px; font-size: 16px; }
+  .doc-body.is-sans { font-size: 15px; }
+  .doc-makam { font-size: 13.5px; letter-spacing: 0.03em; }
+
+  /* Result-page notice + ekler block tighten their own padding too. */
+  .result-notice { padding: 10px 12px; }
+  .ekler-block { padding: 14px 14px; }
+}
+
 /* ── Print ──────────────────────────────────────────────────────────────── */
 @media print {
   .yd-nav, .yd-footer, .yd-back, .result-bar, .result-notice, .doc-banner, .actions, .toast { display: none !important; }
