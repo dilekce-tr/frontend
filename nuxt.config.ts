@@ -93,7 +93,14 @@ export default defineNuxtConfig({
       apiBase: process.env.NUXT_PUBLIC_API_BASE
         || (process.env.NODE_ENV === 'production'
           ? 'https://api.yazbirdilekce.com/api/v1'
-          : 'http://localhost:3012/api/v1')
+          : 'http://localhost:3012/api/v1'),
+      // Contact form endpoint on the shared Sylow forms API. Site-scoped to
+      // yazbirdilekce.com so the backend routes messages to the right
+      // inbox. Override locally with NUXT_PUBLIC_FORMS_ENDPOINT (e.g.
+      // http://localhost:3013/api/v1/forms/yazbirdilekce.com/contact when
+      // running the Sylow API on your laptop).
+      formsEndpoint: process.env.NUXT_PUBLIC_FORMS_ENDPOINT
+        || 'https://api.sylow.net/api/v1/forms/yazbirdilekce.com/contact'
     }
   },
   routeRules: {

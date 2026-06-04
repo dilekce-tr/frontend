@@ -5,6 +5,7 @@ const { theme, toggle } = useTheme()
 const links = [
   { to: '/ornekler', label: 'Örnekler' },
   { to: '/hakkinda', label: 'Hakkında' },
+  { to: '/iletisim', label: 'İletişim' },
   { to: '/gizlilik', label: 'Gizlilik' },
   { to: '/kosullar', label: 'Koşullar' },
 ]
