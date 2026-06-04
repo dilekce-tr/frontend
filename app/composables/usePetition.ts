@@ -28,6 +28,10 @@ export interface Letter {
   // …). Always an array; empty when nothing is missing. Rendered as an
   // amber notice above the document.
   eksikler: string[]
+  // Short Turkish belge names the user should attach when sending the
+  // petition (fatura, sözleşme, fotokopi…). Always an array; rendered as
+  // an "Eklemeniz gerekenler" checklist below the document.
+  ekler: string[]
 }
 
 export interface HistoryEntry {
@@ -220,7 +224,8 @@ function buildFallbackLetter(f: DilekceForm, tarih: string): Letter {
       .split('\n')
       .map((s) => s.trim())
       .filter(Boolean),
-    eksikler: []
+    eksikler: [],
+    ekler: []
   }
 }
 

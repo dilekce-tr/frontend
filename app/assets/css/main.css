@@ -877,6 +877,45 @@ a:hover { color: var(--accent-hover); text-decoration: underline; text-underline
 }
 .result-notice-link:hover { color: var(--warning); opacity: 0.85; }
 
+/* "Eklemeniz gerekenler" — per-petition attachment checklist surfaced
+   from the LLM's `ekler` array. Sits between the document and the
+   action bar so it's part of the "you're done — now what?" beat. */
+.ekler-block {
+  margin: 20px 0 8px;
+  padding: 18px 20px;
+  background: var(--accent-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+  border-radius: var(--r-lg);
+}
+.ekler-title {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin: 0 0 4px;
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--accent);
+}
+.ekler-lead {
+  margin: 0 0 12px;
+  font-size: 13.5px; line-height: 1.5; color: var(--text-2);
+}
+.ekler-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.ekler-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 14.5px; line-height: 1.5; color: var(--text);
+}
+.ekler-check {
+  flex: 0 0 auto;
+  margin-top: 4px;
+  width: 14px; height: 14px;
+  border: 1.5px solid var(--accent);
+  border-radius: 3px;
+  background: var(--surface);
+}
+@media print {
+  .ekler-block { break-inside: avoid; }
+}
+
 .doc {
   position: relative;
   background: var(--surface);

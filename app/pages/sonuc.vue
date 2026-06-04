@@ -4,11 +4,13 @@ import type { Letter } from '~/composables/usePetition'
 const { letter, generate, loading, aiSkipped } = usePetition()
 const { show: toast } = useToast()
 const { download: downloadPdf } = usePdf()
+const { download: downloadDocx } = useDocx()
 const router = useRouter()
 
 const docRef = ref<HTMLElement | null>(null)
 const copied = ref(false)
 const downloading = ref(false)
+const downloadingDocx = ref(false)
 // "Klasik" (serif) by default; could be tied to a user preference later.
 const docSans = ref(false)
 
@@ -40,7 +42,8 @@ function readEdited(): Letter | null {
     adSoyad: t('.doc-sign-name') || letter.value.adSoyad,
     ekBilgiler: Array.from(el.querySelectorAll('.doc-sign-extra'))
       .map((d) => (d as HTMLElement).innerText.trim()).filter(Boolean),
-    eksikler: letter.value.eksikler ?? []
+    eksikler: letter.value.eksikler ?? [],
+    ekler: letter.value.ekler ?? []
   }
 }
 
@@ -72,6 +75,20 @@ async function onDownloadPdf() {
     toast('PDF oluşturulamadı')
   } finally {
     downloading.value = false
+  }
+}
+
+async function onDownloadDocx() {
+  const L = readEdited()
+  if (!L || downloadingDocx.value) return
+  downloadingDocx.value = true
+  toast('Word belgesi hazırlanıyor')
+  try {
+    await downloadDocx(L, { sans: docSans.value })
+  } catch (_) {
+    toast('Word belgesi oluşturulamadı')
+  } finally {
+    downloadingDocx.value = false
   }
 }
 
@@ -162,6 +179,26 @@ async function onRegenerate() {
           </div>
         </div>
 
+        <section
+          v-if="(letter.ekler?.length ?? 0) > 0"
+          class="ekler-block"
+          aria-labelledby="ekler-title"
+        >
+          <h2 id="ekler-title" class="ekler-title">
+            <DilekceIcon name="check" :size="14" :sw="2" />
+            <span>Eklemeniz gerekenler</span>
+          </h2>
+          <p class="ekler-lead">
+            Dilekçenizi göndereceğiniz makama bu belgeleri ek olarak iletmeniz tavsiye edilir.
+          </p>
+          <ul class="ekler-list">
+            <li v-for="(item, i) in letter.ekler" :key="i" class="ekler-item">
+              <span class="ekler-check" aria-hidden="true" />
+              <span>{{ item }}</span>
+            </li>
+          </ul>
+        </section>
+
         <div class="actions">
           <button type="button" class="act-btn" :class="{ 'is-ok': copied }" @click="onCopy">
             <DilekceIcon :name="copied ? 'check' : 'copy'" :size="16" />
@@ -175,6 +212,15 @@ async function onRegenerate() {
           >
             <DilekceIcon name="download" :size="16" />
             {{ downloading ? 'Hazırlanıyor…' : 'PDF olarak indir' }}
+          </button>
+          <button
+            type="button"
+            class="act-btn"
+            :disabled="downloadingDocx"
+            @click="onDownloadDocx"
+          >
+            <DilekceIcon name="download" :size="16" />
+            {{ downloadingDocx ? 'Hazırlanıyor…' : 'Word olarak indir' }}
           </button>
           <button type="button" class="act-btn act-btn--flush" @click="onRegenerate">
             <DilekceIcon name="refresh" :size="16" />
