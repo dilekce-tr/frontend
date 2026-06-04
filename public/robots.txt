@@ -6,5 +6,6 @@ Disallow: /panel
 Disallow: /gecmis
 Disallow: /ayarlar
 Disallow: /plan
+Disallow: /playground/
 
 Sitemap: https://yazbirdilekce.com/sitemap.xml
