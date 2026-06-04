@@ -123,6 +123,13 @@ a:hover { color: var(--accent-hover); text-decoration: underline; text-underline
   background: var(--accent); color: var(--text-on-accent);
 }
 .yd-nav-cta:hover { background: var(--accent-hover); color: var(--text-on-accent); }
+.yd-nav-sep {
+  display: inline-flex; align-items: center;
+  height: 36px; padding: 0 2px;
+  color: var(--text-3);
+  font: 400 14px/1 var(--font-sans);
+  user-select: none;
+}
 
 /* ── Back link ──────────────────────────────────────────────────────────── */
 .yd-back {
@@ -272,7 +279,10 @@ a:hover { color: var(--accent-hover); text-decoration: underline; text-underline
   white-space: nowrap;
   transition: background 120ms ease;
 }
-.ornek-strip:hover .ornek-strip-cta { background: var(--accent-hover); }
+.ornek-strip:hover .ornek-strip-cta {
+  background: var(--accent-hover);
+  color: var(--text-on-accent);
+}
 @media (max-width: 600px) {
   .ornek-strip { flex-direction: column; align-items: flex-start; padding: 18px 18px; }
   .ornek-strip-cta { align-self: stretch; justify-content: center; }
@@ -766,8 +776,19 @@ a:hover { color: var(--accent-hover); text-decoration: underline; text-underline
   font: 500 15px/1 var(--font-sans);
   transition: background 120ms ease, transform 120ms ease;
 }
-.gen-submit:hover:not(:disabled):not(.is-blocked) { background: var(--accent-hover); }
-.gen-submit:active:not(:disabled):not(.is-blocked) { background: var(--accent-press); }
+/* Re-assert text colour on hover/active. Without this, the global
+   `a:hover { color: var(--accent-hover) }` rule wins when .gen-submit is
+   rendered as <a> (e.g. the ornek "Bu örneği özelleştir" CTA), turning
+   the label the same green as the background and making it invisible. */
+.gen-submit:hover:not(:disabled):not(.is-blocked) {
+  background: var(--accent-hover);
+  color: var(--text-on-accent);
+  text-decoration: none;
+}
+.gen-submit:active:not(:disabled):not(.is-blocked) {
+  background: var(--accent-press);
+  color: var(--text-on-accent);
+}
 .gen-submit:disabled { opacity: 0.45; cursor: not-allowed; }
 .gen-submit.is-blocked { opacity: 0.55; }
 .gen-submit:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--focus-ring); }
@@ -970,7 +991,12 @@ a:hover { color: var(--accent-hover); text-decoration: underline; text-underline
 .act-btn--primary {
   background: var(--accent); color: var(--text-on-accent); border-color: var(--accent);
 }
-.act-btn--primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.act-btn--primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  color: var(--text-on-accent);
+  text-decoration: none;
+}
 .act-btn--flush { background: transparent; border-color: transparent; color: var(--text-2); }
 .act-btn--flush:hover { color: var(--text); border-color: var(--border); }
 .act-btn.is-ok { color: var(--success); border-color: color-mix(in srgb, var(--success) 40%, transparent); }
