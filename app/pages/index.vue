@@ -143,11 +143,27 @@ function start(cat?: CategoryId) {
         </div>
       </section>
 
+      <NuxtLink to="/ornekler" class="ornek-strip">
+        <div class="ornek-strip-body">
+          <span class="ornek-strip-eyebrow">Hazır örnekler</span>
+          <span class="ornek-strip-title">Belediyeye dilekçe, istifa, kira itirazı, mazeret…</span>
+          <span class="ornek-strip-sub">Örnekten başlayın, kendi durumunuza göre düzenleyin.</span>
+        </div>
+        <span class="ornek-strip-cta">
+          <span>Örneklere göz at</span>
+          <DilekceIcon name="arrowRight" :size="16" :sw="1.6" />
+        </span>
+      </NuxtLink>
+
       <section class="section">
         <div class="section-head">
           <h2 class="section-title">
             Ne hakkında <em>yazıyorsunuz?</em>
           </h2>
+          <NuxtLink to="/ornekler" class="section-link">
+            <span>Hazır örneklere göz atın</span>
+            <DilekceIcon name="arrowRight" :size="14" :sw="1.6" />
+          </NuxtLink>
         </div>
 
         <div class="cat-ex-grid">

@@ -3,6 +3,7 @@ const year = new Date().getFullYear()
 const { theme, toggle } = useTheme()
 
 const links = [
+  { to: '/ornekler', label: 'Örnekler' },
   { to: '/hakkinda', label: 'Hakkında' },
   { to: '/gizlilik', label: 'Gizlilik' },
   { to: '/kosullar', label: 'Koşullar' },

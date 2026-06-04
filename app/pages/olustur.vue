@@ -1,7 +1,28 @@
 <script setup lang="ts">
+import type { CategoryId } from '~/composables/useCategories'
+
 const { form, loading, error, set, isReady, generate } = usePetition()
+const route = useRoute()
 
 const submitAttempted = ref(false)
+
+// Pre-fill the form from query params so deep-links from /ornekler pages
+// (and any future "start with this example" CTAs) land the user in a
+// populated generator. Only fields the user can also type are accepted;
+// adSoyad and aciklama are intentionally not pre-fillable so we don't
+// put words in the user's mouth.
+const ALLOWED_CATEGORIES: readonly CategoryId[] = [
+  'is', 'kira', 'belediye', 'okul', 'tuketici', 'izin', 'itiraz', 'diger'
+] as const
+onMounted(() => {
+  const q = route.query
+  const kategori = typeof q.kategori === 'string' ? q.kategori : ''
+  if (kategori && (ALLOWED_CATEGORIES as readonly string[]).includes(kategori)) {
+    set('kategori', kategori as CategoryId)
+  }
+  if (typeof q.makam === 'string' && q.makam.trim()) set('makam', q.makam.trim())
+  if (typeof q.konu === 'string' && q.konu.trim())   set('konu', q.konu.trim())
+})
 
 const invalid = computed(() => ({
   makam:    form.value.makam.trim().length === 0,

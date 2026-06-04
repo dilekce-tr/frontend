@@ -5,6 +5,9 @@
 .cache
 dist
 
+# @nuxt/content local SQLite cache
+.data
+
 # Node
 node_modules
 *.log

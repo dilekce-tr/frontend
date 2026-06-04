@@ -220,6 +220,78 @@ a:hover { color: var(--accent-hover); text-decoration: underline; text-underline
 /* ── Section ────────────────────────────────────────────────────────────── */
 .section { padding: 48px 0; }
 .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+/* Homepage "Hazır örnekler" on-ramp — sits between transform + categories */
+.ornek-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin: 16px 0 24px;
+  padding: 20px 24px;
+  background: var(--accent-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+  border-radius: var(--r-lg);
+  text-decoration: none;
+  color: var(--text);
+  transition: border-color 120ms ease, transform 120ms ease;
+}
+.ornek-strip:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+.ornek-strip-body { display: grid; gap: 4px; min-width: 0; }
+.ornek-strip-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+}
+.ornek-strip-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.35;
+}
+.ornek-strip-sub {
+  font-size: 13.5px;
+  color: var(--text-2);
+}
+.ornek-strip-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  padding: 10px 16px;
+  background: var(--accent);
+  color: var(--text-on-accent);
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background 120ms ease;
+}
+.ornek-strip:hover .ornek-strip-cta { background: var(--accent-hover); }
+@media (max-width: 600px) {
+  .ornek-strip { flex-direction: column; align-items: flex-start; padding: 18px 18px; }
+  .ornek-strip-cta { align-self: stretch; justify-content: center; }
+}
+
+.section-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 1px;
+  transition: color 120ms, border-color 120ms;
+}
+.section-link:hover { color: var(--accent-hover); border-bottom-color: var(--accent-hover); }
+.section-link svg { transition: transform 120ms; }
+.section-link:hover svg { transform: translateX(2px); }
 
 /* ── Category grid ──────────────────────────────────────────────────────── */
 .cat-grid {
