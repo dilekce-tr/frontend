@@ -40,6 +40,10 @@ const props = withDefaults(defineProps<Props>(), { size: 16, sw: 1.75 })
     <template v-else-if="name === 'plus'">
       <path d="M12 5v14M5 12h14" />
     </template>
+    <template v-else-if="name === 'search'">
+      <circle cx="11" cy="11" r="7" />
+      <path d="M16 16l5 5" />
+    </template>
     <template v-else-if="name === 'refresh'">
       <path d="M3 12a9 9 0 0 1 15.5-6.3L21 8" />
       <path d="M21 3v5h-5" />

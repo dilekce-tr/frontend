@@ -46,6 +46,39 @@ export default defineContentConfig({
           a: z.string()
         })).optional()
       })
+    }),
+    // Informational guides — answer the "how/what/when" queries that pull
+    // users in earlier than the template searches (e.g. "kira artış oranı
+    // 2026 ne kadar"). The markdown body is the article; frontmatter carries
+    // SEO meta, an optional FAQ (FAQPage JSON-LD), and an optional pointer to
+    // a related örnek so each guide funnels toward the generator.
+    rehber: defineCollection({
+      source: 'rehber/**/*.md',
+      type: 'page',
+      schema: z.object({
+        slug: z.string(),
+        title: z.string(),           // H1
+        description: z.string(),     // Meta description
+        // Short eyebrow label (e.g. "Kira", "İş Hukuku") shown above the H1
+        // and used to group guides on the index.
+        topic: z.string(),
+        // ISO date (YYYY-MM-DD) — rendered as "son güncelleme" and emitted
+        // as dateModified in Article JSON-LD. Keeps time-sensitive guides
+        // (rates, limits) visibly fresh.
+        updated: z.string(),
+        keywords: z.array(z.string()).optional(),
+        // Optional related örnek — renders a CTA card linking into the
+        // matching example (and from there, the generator).
+        relatedOrnek: z.object({
+          kategori: z.string(),
+          slug: z.string(),
+          label: z.string()
+        }).optional(),
+        faq: z.array(z.object({
+          q: z.string(),
+          a: z.string()
+        })).optional()
+      })
     })
   }
 })

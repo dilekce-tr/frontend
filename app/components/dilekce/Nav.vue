@@ -8,6 +8,9 @@
         <span class="yd-wm-dot" aria-hidden="true" />
       </NuxtLink>
       <nav class="yd-nav-right">
+        <NuxtLink to="/ornekler" class="yd-nav-link">
+          <span>Örnekler</span>
+        </NuxtLink>
         <NuxtLink to="/iletisim" class="yd-nav-link">
           <span>İletişim</span>
         </NuxtLink>

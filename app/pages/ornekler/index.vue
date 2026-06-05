@@ -5,32 +5,71 @@ const { CATEGORIES } = useCategories()
 
 const { data: items } = await useAsyncData('ornekler-all', () =>
   queryCollection('ornekler')
-    .select('kategori', 'slug', 'title', 'description', 'konu')
+    .select('kategori', 'slug', 'title', 'description', 'konu', 'keywords')
     .all()
 )
 
 // Each example's `description` is a full SEO-tuned meta sentence (~150
-// chars). Too long for a card. Trim to a single short clause for the
-// list view so two columns stay readable. Splits on the first period
-// or "—" and caps at ~80 chars with an ellipsis.
+// chars). Trim to a single short clause for the compact tile.
 function shortDesc(s: string): string {
   if (!s) return ''
   const first = s.split(/[.—–]/)[0].trim()
   return first.length > 90 ? first.slice(0, 87).trimEnd() + '…' : first
 }
 
-// Group by kategori so we can render one section per category.
-const grouped = computed(() => {
-  const map = new Map<CategoryId, typeof items.value>()
-  for (const it of items.value ?? []) {
-    const list = map.get(it.kategori as CategoryId) ?? []
-    list.push(it)
-    map.set(it.kategori as CategoryId, list)
-  }
-  return CATEGORIES
-    .map(c => ({ kategori: c, examples: map.get(c.id) ?? [] }))
-    .filter(g => g.examples.length > 0)
+// Fold Turkish-specific letters to their ASCII base and lowercase, so the
+// search treats "ş/s", "ı/i", "ö/o", "ü/u", "ç/c", "ğ/g" as equivalent —
+// a user typing "istifa" or "tuketici" still matches "İstifa" / "Tüketici".
+// Uses a per-char map (not locale lowercasing) precisely because we WANT
+// dotless/dotted i and umlauts collapsed, which locale rules preserve.
+const TR_FOLD: Record<string, string> = {
+  ç: 'c', Ç: 'c', ğ: 'g', Ğ: 'g', ı: 'i', I: 'i', İ: 'i',
+  ö: 'o', Ö: 'o', ş: 's', Ş: 's', ü: 'u', Ü: 'u'
+}
+function foldTr(s: string): string {
+  return Array.from(s ?? '')
+    .map(ch => TR_FOLD[ch] ?? ch)
+    .join('')
+    .toLowerCase()
+}
+
+const allExamples = computed(() => items.value ?? [])
+
+// Categories that actually have examples (drives the chip row).
+const activeCategories = computed(() =>
+  CATEGORIES.map(c => ({
+    ...c,
+    count: allExamples.value.filter(e => e.kategori === c.id).length
+  })).filter(c => c.count > 0)
+)
+
+const activeFilter = ref<CategoryId | 'all'>('all')
+const search = ref('')
+
+// Apply category chip AND search together. Search matches across title,
+// konu, description, keywords and category name — all Turkish-folded.
+const visibleExamples = computed(() => {
+  const q = foldTr(search.value.trim())
+  return allExamples.value.filter((e) => {
+    if (activeFilter.value !== 'all' && e.kategori !== activeFilter.value) return false
+    if (!q) return true
+    const hay = foldTr([
+      e.title, e.konu, e.description, catName(e.kategori),
+      ...(e.keywords ?? [])
+    ].join(' '))
+    return hay.includes(q)
+  })
 })
+
+function href(ex: { kategori: string; slug: string }) {
+  return `/ornekler/${ex.kategori}/${ex.slug}`
+}
+function catName(id: string) {
+  return CATEGORIES.find(c => c.id === id)?.name ?? ''
+}
+function catIcon(id: string) {
+  return CATEGORIES.find(c => c.id === id)?.icon ?? 'dots'
+}
 
 useSeoMeta({
   title: 'Dilekçe Örnekleri — YazbirDilekçe',
@@ -59,38 +98,68 @@ useHead({
         </p>
       </header>
 
-      <section
-        v-for="g in grouped"
-        :key="g.kategori.id"
-        class="ornek-group"
-      >
-        <header class="ornek-group-head">
-          <span class="ornek-group-ico" aria-hidden="true">
-            <DilekceIcon :name="g.kategori.icon" :size="14" :sw="1.5" />
+      <div class="ornek-search">
+        <DilekceIcon name="search" :size="17" :sw="1.6" class="ornek-search-ico" />
+        <input
+          v-model="search"
+          type="search"
+          class="ornek-search-input"
+          placeholder="Dilekçe ara — örn. kira, istifa, fatura…"
+          aria-label="Dilekçe ara"
+        >
+        <button
+          v-if="search"
+          type="button"
+          class="ornek-search-clear"
+          aria-label="Aramayı temizle"
+          @click="search = ''"
+        >
+          <DilekceIcon name="x" :size="15" :sw="1.7" />
+        </button>
+      </div>
+
+      <div class="ornek-chips" role="tablist">
+        <button
+          class="ornek-chip"
+          :class="{ 'is-active': activeFilter === 'all' }"
+          @click="activeFilter = 'all'"
+        >Tümü <span class="ornek-chip-n">{{ allExamples.length }}</span></button>
+        <button
+          v-for="c in activeCategories"
+          :key="c.id"
+          class="ornek-chip"
+          :class="{ 'is-active': activeFilter === c.id }"
+          @click="activeFilter = c.id"
+        >
+          <DilekceIcon :name="c.icon" :size="13" :sw="1.5" />
+          {{ c.name }} <span class="ornek-chip-n">{{ c.count }}</span>
+        </button>
+      </div>
+
+      <div v-if="visibleExamples.length" class="ornek-grid">
+        <NuxtLink
+          v-for="ex in visibleExamples"
+          :key="ex.slug"
+          :to="href(ex)"
+          class="ornek-tile"
+        >
+          <span class="ornek-tile-ico" aria-hidden="true">
+            <DilekceIcon :name="catIcon(ex.kategori)" :size="18" :sw="1.5" />
           </span>
-          <h2 class="ornek-group-title">{{ g.kategori.name }}</h2>
-          <span class="ornek-group-count">{{ g.examples.length }}</span>
-        </header>
+          <span class="ornek-tile-cat">{{ catName(ex.kategori) }}</span>
+          <span class="ornek-tile-title">{{ ex.title }}</span>
+          <span class="ornek-tile-desc">{{ shortDesc(ex.description) }}</span>
+          <span class="ornek-tile-go">
+            Örneği gör <DilekceIcon name="arrowRight" :size="14" :sw="1.6" />
+          </span>
+        </NuxtLink>
+      </div>
 
-        <ul class="ornek-group-list">
-          <li v-for="ex in g.examples" :key="ex.slug">
-            <NuxtLink
-              :to="`/ornekler/${ex.kategori}/${ex.slug}`"
-              class="ornek-card"
-              :title="ex.description"
-            >
-              <span class="ornek-card-body">
-                <span class="ornek-card-title">{{ ex.title }}</span>
-                <span class="ornek-card-desc">{{ shortDesc(ex.description) }}</span>
-              </span>
-              <DilekceIcon name="arrowRight" :size="15" :sw="1.6" class="ornek-card-arrow" />
-            </NuxtLink>
-          </li>
-        </ul>
-      </section>
-
-      <p v-if="!grouped.length" class="ornek-index-empty">
+      <p v-else-if="!allExamples.length" class="ornek-index-empty">
         Henüz örnek eklenmedi.
+      </p>
+      <p v-else class="ornek-index-empty">
+        “{{ search.trim() }}” için örnek bulunamadı.
       </p>
     </div>
   </div>
@@ -99,15 +168,12 @@ useHead({
 <style scoped>
 .ornek-index-wrap { max-width: 880px; padding-bottom: 80px; }
 
-.ornek-index-head { margin: 24px 0 36px; }
+.ornek-index-head { margin: 24px 0 28px; }
 .ornek-index-title {
   font-family: var(--font-serif);
   font-size: clamp(36px, 5vw, 52px);
-  line-height: 1.08;
-  font-weight: 400;
-  letter-spacing: -0.018em;
-  margin: 12px 0 16px;
-  color: var(--text);
+  line-height: 1.08; font-weight: 400; letter-spacing: -0.018em;
+  margin: 12px 0 16px; color: var(--text);
 }
 .ornek-index-title em { font-style: italic; color: var(--accent); }
 .ornek-index-lead {
@@ -115,103 +181,86 @@ useHead({
   font-size: 16.5px; line-height: 1.6; color: var(--text-2);
 }
 
-/* Compact one-line grouped list. Category header is a quiet mono-cap
-   eyebrow; each row is title + chevron, description shown on hover via
-   the title attribute so screen readers and keyboard users still get it. */
-.ornek-group { margin-bottom: 28px; }
-.ornek-group-head {
-  display: flex; align-items: center; gap: 8px;
-  padding: 0 0 4px;
-  margin-bottom: 2px;
+/* --- search --- */
+.ornek-search { position: relative; margin-bottom: 14px; }
+.ornek-search-ico {
+  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  color: var(--text-3); pointer-events: none;
 }
-.ornek-group-ico {
+.ornek-search-input {
+  width: 100%; padding: 13px 44px 13px 42px;
+  font-family: var(--font-sans); font-size: 15px;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); border-radius: var(--r-md);
+  outline: none; transition: border-color 120ms, box-shadow 120ms;
+}
+.ornek-search-input:focus {
+  border-color: var(--accent); box-shadow: 0 0 0 3px var(--focus-ring);
+}
+/* Hide the native search clear (we render our own). */
+.ornek-search-input::-webkit-search-decoration,
+.ornek-search-input::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
+.ornek-search-clear {
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
   display: inline-flex; align-items: center; justify-content: center;
-  width: 16px; height: 16px;
-  color: var(--accent);
+  width: 28px; height: 28px; padding: 0;
+  background: transparent; border: none; border-radius: 7px;
+  color: var(--text-3); cursor: pointer; transition: background 120ms, color 120ms;
 }
-.ornek-group-title {
-  margin: 0;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-2);
-}
-.ornek-group-count {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.04em;
-  color: var(--text-3);
-  margin-left: 2px;
-}
+.ornek-search-clear:hover { background: var(--accent-soft); color: var(--accent); }
 
-.ornek-group-list {
-  list-style: none; margin: 0; padding: 0;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+/* --- filter chips --- */
+.ornek-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+.ornek-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 13px; border-radius: 999px;
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--text-2); font-size: 13px; font-weight: 500; cursor: pointer;
+  transition: all 120ms;
 }
-@media (max-width: 640px) {
-  .ornek-group-list { grid-template-columns: 1fr; }
-}
+.ornek-chip:hover { border-color: var(--accent); color: var(--accent); }
+.ornek-chip.is-active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.ornek-chip-n { font-family: var(--font-mono); font-size: 10.5px; opacity: 0.7; }
+.ornek-chip.is-active .ornek-chip-n { opacity: 0.85; }
 
-/* Card-style links — affordance signals at rest:
-   - 1px border with a chunky left accent strip (always visible)
-   - accent-coloured chevron pointing right
-   - cursor pointer
-   On hover the whole card tints, the title underlines, the arrow nudges. */
-.ornek-card {
-  display: flex; align-items: center; gap: 12px;
-  padding: 14px 14px 14px 16px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
-  border-radius: var(--r-md);
-  text-decoration: none;
-  color: var(--text);
-  cursor: pointer;
-  transition: background 120ms, border-color 120ms, transform 120ms;
+/* --- grid --- */
+.ornek-grid {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px;
 }
-.ornek-card:hover {
-  background: var(--accent-soft);
-  border-color: var(--accent);
-  transform: translateY(-1px);
+@media (max-width: 760px) { .ornek-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .ornek-grid { grid-template-columns: 1fr; } }
+.ornek-tile {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 18px; min-height: 160px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-lg); text-decoration: none; color: var(--text);
+  transition: border-color 120ms, transform 120ms, box-shadow 120ms;
 }
-.ornek-card-body {
-  flex: 1; min-width: 0;
-  display: grid; gap: 3px;
+.ornek-tile:hover {
+  border-color: var(--accent); transform: translateY(-2px);
+  box-shadow: 0 8px 24px -16px var(--accent);
 }
-.ornek-card-title {
-  font-size: 14.5px;
-  font-weight: 600;
-  line-height: 1.35;
-  color: var(--text);
+.ornek-tile-ico {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px; border-radius: 9px;
+  background: var(--accent-soft); color: var(--accent); margin-bottom: 4px;
 }
-.ornek-card:hover .ornek-card-title {
-  color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-thickness: 1px;
+.ornek-tile-cat {
+  font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3);
 }
-.ornek-card-desc {
-  font-size: 12.5px;
-  line-height: 1.45;
-  color: var(--text-2);
-  /* Cap at one line so the two-column grid stays tidy. */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.ornek-tile-title { font-size: 15px; font-weight: 600; line-height: 1.3; color: var(--text); }
+.ornek-tile:hover .ornek-tile-title {
+  color: var(--accent); text-decoration: underline;
+  text-underline-offset: 3px; text-decoration-thickness: 1px;
 }
-.ornek-card-arrow {
-  color: var(--accent);
-  flex: 0 0 auto;
-  transition: transform 120ms;
+.ornek-tile-desc { font-size: 12.5px; line-height: 1.45; color: var(--text-2); flex: 1; }
+.ornek-tile-go {
+  display: inline-flex; align-items: center; gap: 5px; margin-top: 4px;
+  font-size: 12.5px; font-weight: 600; color: var(--accent);
 }
-.ornek-card:hover .ornek-card-arrow { transform: translateX(3px); }
 
 .ornek-index-empty {
-  margin: 40px 0;
-  font-size: 14px; color: var(--text-3); text-align: center;
+  margin: 40px 0; font-size: 14px; color: var(--text-3); text-align: center;
 }
 </style>

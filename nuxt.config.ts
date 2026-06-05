@@ -9,8 +9,26 @@ if (process.env.NODE_ENV !== 'production' && process.platform === 'darwin' && !p
 }
 
 export default defineNuxtConfig({
-  modules: ['@vercel/analytics', '@nuxt/content'],
+  modules: ['@vercel/analytics', '@nuxt/content', '@nuxtjs/sitemap'],
   compatibilityDate: '2025-07-15',
+  // Canonical origin for absolute URLs in the generated sitemap.
+  site: { url: 'https://yazbirdilekce.com' },
+  // @nuxtjs/sitemap auto-discovers prerendered routes (the /ornekler pages)
+  // and static pages, so the sitemap stays in sync with content without
+  // hand-editing. Exclude the app-only, no-index routes — these mirror the
+  // Disallow list in public/robots.txt.
+  sitemap: {
+    exclude: [
+      '/olustur',
+      '/sonuc',
+      '/panel',
+      '/gecmis',
+      '/ayarlar',
+      '/plan',
+      '/playground/**',
+      '/build-cost'
+    ]
+  },
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
   app: {
@@ -116,7 +134,9 @@ export default defineNuxtConfig({
     // runtime queryCollection() silently returns []. (2) these pages
     // change rarely and benefit from being plain files on the edge.
     '/ornekler':                 { prerender: true },
-    '/ornekler/**':              { prerender: true }
+    '/ornekler/**':              { prerender: true },
+    '/rehber':                   { prerender: true },
+    '/rehber/**':                { prerender: true }
   },
   // Prerender the örnekler index and every example detail page. We pre-list
   // each URL explicitly rather than enabling crawlLinks: true so the
@@ -127,19 +147,30 @@ export default defineNuxtConfig({
     prerender: {
       failOnError: true,
       routes: [
+        // Emit the @nuxtjs/sitemap output as a static file at build time so
+        // Vercel serves /sitemap.xml without a runtime function. The module
+        // serves it dynamically otherwise (no static file in .output/public).
+        '/sitemap.xml',
         '/ornekler',
         '/ornekler/belediye/sokak-lambasi-arizasi',
         '/ornekler/belediye/cop-toplama-aksamasi',
         '/ornekler/is/istifa-dilekcesi',
         '/ornekler/is/yillik-izin-talebi',
+        '/ornekler/is/askerlik-nedeniyle-istifa',
         '/ornekler/kira/kira-zammina-itiraz',
         '/ornekler/kira/depozito-iade-talebi',
         '/ornekler/okul/mazeret-devamsizlik',
         '/ornekler/okul/burs-basvurusu',
         '/ornekler/tuketici/kombi-arizasi',
         '/ornekler/tuketici/arizali-urun-iadesi',
+        '/ornekler/tuketici/fatura-itirazi',
         '/ornekler/itiraz/trafik-cezasina-itiraz',
-        '/ornekler/itiraz/sinav-sonucuna-itiraz'
+        '/ornekler/itiraz/sinav-sonucuna-itiraz',
+        '/ornekler/izin/ucretsiz-izin-talebi',
+        '/ornekler/diger/genel-talep-dilekcesi',
+        '/rehber',
+        '/rehber/kira-artis-orani-nedir',
+        '/rehber/ihbar-suresi-ne-kadar'
       ]
     }
   }
