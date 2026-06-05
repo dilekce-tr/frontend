@@ -4,7 +4,7 @@
   <header class="yd-nav">
     <div class="yd-nav-inner">
       <NuxtLink to="/" class="yd-wm" aria-label="YazbirDilekçe ana sayfa">
-        <span class="yd-wm-text">Yazbir<em>Dilekçe</em></span>
+        <span class="yd-wm-text">YazbirDilekçe</span>
         <span class="yd-wm-dot" aria-hidden="true" />
       </NuxtLink>
       <nav class="yd-nav-right">

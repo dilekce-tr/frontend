@@ -101,13 +101,14 @@ a:hover { color: var(--accent-hover); text-decoration: underline; text-underline
   padding: 0 20px;
 }
 .yd-wm {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-family: var(--font-serif); font-size: 22px; color: var(--text);
-  cursor: pointer; background: transparent; border: 0;
+  display: inline-flex; align-items: baseline; gap: 4px;
+  font-family: var(--font-sans); font-weight: 600; font-size: 18px;
+  letter-spacing: 0.04em; text-transform: uppercase; color: var(--text);
+  cursor: pointer; background: transparent; border: 0; text-decoration: none;
 }
-.yd-wm-text em { font-style: italic; color: var(--accent); }
 .yd-wm-dot {
-  width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-left: 2px;
+  width: 5px; height: 5px; border-radius: 50%; background: var(--accent);
+  transform: translateY(-7px);
 }
 .yd-nav-right { display: flex; align-items: center; gap: 6px; }
 .yd-nav-link {
