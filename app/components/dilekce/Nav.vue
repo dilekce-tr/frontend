@@ -11,9 +11,6 @@
         <NuxtLink to="/ornekler" class="yd-nav-link">
           <span>Örnekler</span>
         </NuxtLink>
-        <NuxtLink to="/iletisim" class="yd-nav-link">
-          <span>İletişim</span>
-        </NuxtLink>
         <span class="yd-nav-sep" aria-hidden="true">|</span>
         <NuxtLink to="/olustur" class="yd-nav-link yd-nav-cta">
           <DilekceIcon name="sparkle" :size="15" />
