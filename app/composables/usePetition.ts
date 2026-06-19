@@ -96,6 +96,7 @@ interface ApiError {
 export function usePetition() {
   const { request } = useApi()
   const { trDate } = useTrDate()
+  const { track } = useAnalytics()
 
   const form    = useState<DilekceForm>('yd-form',    () => (
     import.meta.dev
@@ -142,6 +143,10 @@ export function usePetition() {
       letter.value = res.letter
       generationId.value = res.generation_id ?? null
       recordHistory(res.letter)
+      // GA4 conversion event: a petition was successfully generated. `kategori`
+      // lets us segment which categories ads actually convert into; `ai: true`
+      // marks the real LLM path (vs the offline fallback below).
+      track('generate', { kategori: form.value.kategori, ai: true })
       return res.letter
     } catch (e: unknown) {
       // If the request never reached a server (Rails down, offline, CORS),
@@ -154,6 +159,9 @@ export function usePetition() {
         generationId.value = null
         aiSkipped.value = true
         recordHistory(fallback)
+        // Still a completed generation from the user's view, but the LLM was
+        // unreachable — `ai: false` lets us tell the two apart in GA.
+        track('generate', { kategori: form.value.kategori, ai: false })
         return fallback
       }
       error.value = formatApiError(e)
