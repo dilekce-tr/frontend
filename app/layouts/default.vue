@@ -4,5 +4,6 @@
     <slot />
     <DilekceFooter />
     <DilekceToast />
+    <DilekceConsentBanner />
   </div>
 </template>

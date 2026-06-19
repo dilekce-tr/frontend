@@ -72,6 +72,26 @@ export default defineNuxtConfig({
         { rel: 'canonical', href: 'https://yazbirdilekce.com/' }
       ],
       script: [
+        // Google Analytics 4 (gtag.js). Only injected in production builds so
+        // local dev and Vercel previews don't send hits to the property. The
+        // measurement ID lives in runtimeConfig.public.gaId.
+        ...(process.env.NODE_ENV === 'production'
+          ? [
+              {
+                src: `https://www.googletagmanager.com/gtag/js?id=${process.env.NUXT_PUBLIC_GA_ID || 'G-P4EVXZL85L'}`,
+                async: true
+              },
+              {
+                // Consent Mode: analytics_storage starts 'denied' so no
+                // analytics cookies are written until the visitor accepts the
+                // KVKK banner. If they accepted on a prior visit we read the
+                // stored choice here (before gtag config) and grant up front,
+                // so a returning user is tracked from the first hit. The
+                // ConsentBanner component flips this live via consent 'update'.
+                innerHTML: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());var c='denied';try{if(localStorage.getItem('yd:consent')==='granted')c='granted';}catch(e){}gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:c});gtag('config','${process.env.NUXT_PUBLIC_GA_ID || 'G-P4EVXZL85L'}');`
+              }
+            ]
+          : []),
         // JSON-LD: Organization + WebSite. Gives Google an entity to attach
         // to the result, and the WebSite block enables the sitelinks
         // search box once the site is indexed.
@@ -118,7 +138,11 @@ export default defineNuxtConfig({
       // http://localhost:3013/api/v1/forms/yazbirdilekce.com/contact when
       // running the Sylow API on your laptop).
       formsEndpoint: process.env.NUXT_PUBLIC_FORMS_ENDPOINT
-        || 'https://api.sylow.net/api/v1/forms/yazbirdilekce.com/contact'
+        || 'https://api.sylow.net/api/v1/forms/yazbirdilekce.com/contact',
+      // Google Analytics 4 measurement ID. Loaded only in production builds
+      // (see the gtag script below) so dev/preview traffic stays out of the
+      // property. Override per-environment with NUXT_PUBLIC_GA_ID.
+      gaId: process.env.NUXT_PUBLIC_GA_ID || 'G-P4EVXZL85L'
     }
   },
   routeRules: {
